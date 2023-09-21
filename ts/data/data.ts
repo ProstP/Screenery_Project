@@ -1,3 +1,5 @@
+//Здесь несколько констант, описывающих типы данных
+
 const text_elt = new Text_elt_class;
 text_elt.Text = "New Text";
 text_elt.Font.Color = 'black';

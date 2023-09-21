@@ -1,24 +1,16 @@
 class Constucter_class {
+    //Это основной объект, он хранит в себе все данные и все методы, через него мы получим доступ ко всему
+
     //Свойства
     Name: string;
-    List_of_selected: List_of_selected_class;
-    List_of_slides: List_of_slide_class;
-    Workplace: Workplace_class;
-    History_of_actions: History_of_actions_class;
+    List_of_selected: List_of_selected_class;       //Список выбранных элементов/слайдов
+    List_of_slides: List_of_slide_class;            //Список слайдов
+    Workplace: Workplace_class;                     //Рабочее простанство
+    History_of_actions: History_of_actions_class;   //История действий
 
-    //Методы
+    //Методы, думаю рассказывать что они делают не вижу смысла, по их названиям должно быть понятно
     Preview() {
         return "Предпросмотр";
-    };
-
-    Cancel() { // Ctrl + Z
-        this.History_of_actions.Cancel_action();
-        return;
-    };
-
-    Undo() { // Ctrl + Y
-        this.History_of_actions.Redo_action();
-        return;
     };
 
     Create_new_presentation() {
@@ -39,9 +31,11 @@ class Constucter_class {
 };
 
 class List_of_selected_class {
+    //Это список выбранных itemов, это могут быть как и слайды, так и элементы в слайде
+
     //Свойства
-    Selected_items: Slide_class|Element_class[];
-    Type_of_items: string;
+    Selected_items: Slide_class|Element_class[];    //Список этих itemов
+    Type_of_items: string;                          //Здесь указан тип выделенных itemов или это слайд или это элементы
 
     //Методы
     Select_new_item(item: Slide_class|Element_class) {
@@ -58,8 +52,10 @@ class List_of_selected_class {
 };
 
 class List_of_slide_class {
+    //Список слайдов
+
     //Свойства
-    Slides: Slide_class[];
+    Slides: Slide_class[]; //Просто список всех слайдов
     
     //Методы
     Create_new_slide() {
@@ -72,20 +68,17 @@ class List_of_slide_class {
 };
 
 class Workplace_class {
-    //Свойства
-    Selected_slide: Slide_class;
+    //Рабочая область скажем так, поначалу я думал, что здесь будет и какие то методы, но вроде и объявлять ничего
+    //Если что можем обойтись без отдельного класса, а поле Workplace в классе Construct будет просто указателем
 
-    //Методы
-    Create_new_element_on_slide(type: string) {
-        this.Selected_slide.Create_new_element(type);
-        return;
-    };
+    //Свойства
+    Selected_slide: Slide_class; //Выбранный слайд будет передаваться сюда
 };
 
 class History_of_actions_class {
     //Свойства
-    List_of_actions: Action[];
-    List_of_canceled_actions: Action[];
+    List_of_actions: Action[];          //Список всех предыдущих действий
+    List_of_canceled_actions: Action[]; //Список действий которые мы отменили нажатием Ctrl + Z
 
     //Методы
     Cancel_action() { // Ctrl + Z
@@ -98,15 +91,15 @@ class History_of_actions_class {
 
 class Action {
     ID: number;
-    Copy_of_presentation: any;//Не придуман в каком формате
+    Copy_of_presentation: any;  //Либо здесь будет лежать просто список слайдов, либо к нему добавится список выбранных элементов
 };
 
 class Slide_class {
     //Свойства
-    ID: number;
-    List_of_elements: Element_class[];
+    ID: number;                         
+    List_of_elements: Element_class[];  //Список элементов, которые находятся в слайде
     Backgrond: string;
-    Preview: any;//Ещё не знаю
+    Preview: any;                       //Предпросмотр слайда, который будет отображаться в списке слайдов в панели выбора слайда
 
     //Методы
     Create_new_element(type: string){
@@ -134,7 +127,7 @@ class Image_elt_class extends Element_class {
 
 class Graphic_elt_class extends Element_class {
     Type: "Graphic";
-    Data: any[];//Определённый набор данных
+    Data: any[];    //Определённый набор данных
 }
 
 //Дальше идёт объявления типов
