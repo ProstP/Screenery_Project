@@ -10,3 +10,10 @@
   В папке ts содержаться все скрипты написанные на typesrcipt:
     В папке types расписаны структуры данных.
   node_modiles и файлы .json часть Node.js, лучше не трогайте
+
+  Дизайн:
+    https://www.figma.com/file/da6vtAxVJrY8FWjQ613SLP/Screenery---A-presentation-maker?type=design&node-id=0%3A1&mode=design&t=k70QykUEo4utB2f3-1
+    TODO:
+      1)Кнопки на верхней панели (вставка элементов, экспорт и прочее)
+      2)кнопки создания и удаления слайдов на левой панели
+      3)Различные меню, вроде меню с настройками файла и предпросмотра
