@@ -4,7 +4,7 @@ import { Editor } from "../ts/const/const";
 import RenderSlides from "../Slides/Slides";
 
 function RenderEditor() {
-  let slide1: SlideType = {
+  const slide1: SlideType = {
     ID: 1,
     List_of_Elements: [],
     Background: "",
@@ -13,7 +13,7 @@ function RenderEditor() {
   Editor.Presentation.ListOfSlides.push(slide1);
   Editor.Presentation.CurentSlide = 1;
 
-  let slides = RenderSlides(Editor.Presentation);
+  const slides = RenderSlides(Editor.Presentation);
 
   return (
     <div>
