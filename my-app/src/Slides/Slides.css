@@ -1,20 +1,16 @@
-*
-{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.List-of-slides
-{
-    text-decoration: none;
+.List-of-slides {
+  text-decoration: none;
 }
 
-.List-of-slides__slide
-{
-    margin: 2px;
+.List-of-slides__slide {
+  margin: 2px;
 }
 
-.List-of-slides__slide_current
-{
-    border: 2px solid red;
+.List-of-slides__slide_current {
+  border: 2px solid red;
 }

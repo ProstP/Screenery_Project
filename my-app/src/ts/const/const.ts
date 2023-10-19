@@ -93,13 +93,7 @@ export const HistoryOfActions: HistoryOfActionsType = {
 
 export const Slide: SlideType = {
   ID: 0,
-  List_of_Elements: [
-    TextElt,
-    ImageElt,
-    RectangleElt,
-    EllipseElt,
-    TriangleElt,
-  ],
+  List_of_Elements: [TextElt, ImageElt, RectangleElt, EllipseElt, TriangleElt],
   Background: "",
   Color: "white",
 };
