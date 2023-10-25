@@ -100,7 +100,7 @@ export const Slide: SlideType = {
 
 export const Presentation: PresentationType = {
   Name: "New name",
-  CurentSlide: 1,
+  CurentSlide: 0,
   ListOfSlides: [Slide],
   ListOfSelected: {
     Slides: [],

@@ -1,16 +1,17 @@
-* {
-  margin: 0;
-  padding: 0;
+.list-of-slides {
+  list-style-type: none;
+  width: 95%;
+  overflow-y: scroll;
 }
 
-.List-of-slides {
-  text-decoration: none;
+.slide {
+  position: relative;
+  width: 90%;
+  height: 14vh;
+  border: 5px solid black;
+  margin-top: 5%;
 }
 
-.List-of-slides__slide {
-  margin: 2px;
-}
-
-.List-of-slides__slide_current {
-  border: 2px solid red;
+.current {
+  border: 5px solid green;
 }

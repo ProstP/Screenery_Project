@@ -1,24 +1,34 @@
 import React from "react";
-import { SlideType } from "../ts/types/types";
 import { Editor } from "../ts/const/const";
 import RenderSlides from "../Slides/Slides";
+import "./Editor.css";
+import RenderElements from "../Elements/Elements";
+import Background from "../img/background.png";
+import Logo from "../img/screenery_logo_1.png";
 
 function RenderEditor() {
-  const slide1: SlideType = {
-    ID: 1,
-    List_of_Elements: [],
-    Background: "",
-    Color: "red",
-  };
-  Editor.Presentation.ListOfSlides.push(slide1);
-  Editor.Presentation.CurentSlide = 1;
-
   const slides = RenderSlides(Editor.Presentation);
+  const workplace = RenderElements(
+    Editor.Presentation.ListOfSlides[Editor.Presentation.CurentSlide]
+      .List_of_Elements,
+  );
 
   return (
-    <div>
-      <p>{Editor.Presentation.Name}</p>
-      {slides}
+    <div className="editor">
+      <img className="background" src={Background}></img>
+      <img className="logo" src={Logo}></img>
+      <p className="name">{Editor.Presentation.Name}</p>
+      <div className="slides">{slides}</div>
+      <div
+        className="workplace"
+        style={{
+          backgroundColor:
+            Editor.Presentation.ListOfSlides[Editor.Presentation.CurentSlide]
+              .Color,
+        }}
+      >
+        {workplace}
+      </div>
     </div>
   );
 }

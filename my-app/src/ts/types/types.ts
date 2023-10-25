@@ -17,6 +17,7 @@ export type FontType = {
 
 export type ElementType = {
   ID: number;
+  Type: string;
   Position: PositionType;
   Scale: ScaleType;
 };
@@ -38,9 +39,15 @@ export type GraphicElementType = ElementType & {
   Color: string;
 };
 
+export type generalElementType =
+  | ElementType
+  | TextElementType
+  | ImageElementType
+  | GraphicElementType;
+
 export type SlideType = {
   ID: number;
-  List_of_Elements: ElementType[];
+  List_of_Elements: generalElementType[];
   Background: string;
   Color: string;
 };
