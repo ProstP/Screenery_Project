@@ -1,16 +1,16 @@
 import React from "react";
 import { PresentationType } from "../ts/types/types";
 import RenderElements from "../Elements/Elements";
-import "./Slides.css";
+import Styles from "./Slides.module.css";
 
 function RenderSlides(presentation: PresentationType) {
   return (
-    <ul className="list-of-slides">
+    <ul className={Styles.list}>
       {presentation.ListOfSlides.map((slide) => (
         <li>
           {slide.ID == presentation.CurentSlide ? (
             <div
-              className="slide current"
+              className={Styles.current}
               style={{
                 backgroundColor: slide.Color,
               }}
@@ -19,7 +19,7 @@ function RenderSlides(presentation: PresentationType) {
             </div>
           ) : (
             <div
-              className="slide"
+              className={Styles.slide}
               style={{
                 backgroundColor: slide.Color,
               }}

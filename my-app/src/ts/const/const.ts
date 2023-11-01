@@ -8,37 +8,43 @@ import {
   EditorType,
 } from "../types/types";
 
+import cate from "../../img/kote.jpg";
+
+import circle from "../../img/circle.png";
+import triangle from "../../img/triangle.png";
+import square from "../../img/square.png";
+
 export const TextElt: TextElementType = {
   Type: "text",
   ID: 0,
   Text: "New Text",
   Font: {
     Color: "black",
-    FontSize: 12,
+    FontSize: 25,
     FontFamily: "Arial",
     FontStyle: "normal",
   },
   Position: {
-    X: 0,
-    Y: 0,
+    X: 20,
+    Y: 10,
   },
   Scale: {
-    Wigth: 0,
-    Height: 0,
+    Wigth: 40,
+    Height: 20,
   },
 };
 
 export const ImageElt: ImageElementType = {
   Type: "image",
   ID: 0,
-  Src: "default.txt",
+  Src: cate,
   Position: {
-    X: 0,
-    Y: 0,
+    X: 11,
+    Y: 23,
   },
   Scale: {
-    Wigth: 0,
-    Height: 0,
+    Wigth: 20,
+    Height: 24,
   },
 };
 
@@ -46,14 +52,15 @@ export const RectangleElt: GraphicElementType = {
   Type: "graphic",
   PrimitivesVariant: "rectangle",
   Color: "black",
+  Src: square,
   ID: 0,
   Position: {
-    X: 0,
-    Y: 0,
+    X: 80,
+    Y: 80,
   },
   Scale: {
-    Wigth: 0,
-    Height: 0,
+    Wigth: 10,
+    Height: 15,
   },
 };
 
@@ -61,14 +68,15 @@ export const EllipseElt: GraphicElementType = {
   Type: "graphic",
   PrimitivesVariant: "ellipse",
   Color: "black",
+  Src: circle,
   ID: 0,
   Position: {
-    X: 0,
-    Y: 0,
+    X: 34,
+    Y: 73,
   },
   Scale: {
-    Wigth: 0,
-    Height: 0,
+    Wigth: 20,
+    Height: 10,
   },
 };
 
@@ -76,14 +84,15 @@ export const TriangleElt: GraphicElementType = {
   Type: "graphic",
   PrimitivesVariant: "triangle",
   Color: "black",
+  Src: triangle,
   ID: 0,
   Position: {
-    X: 0,
-    Y: 0,
+    X: 10,
+    Y: 70,
   },
   Scale: {
-    Wigth: 0,
-    Height: 0,
+    Wigth: 10,
+    Height: 10,
   },
 };
 

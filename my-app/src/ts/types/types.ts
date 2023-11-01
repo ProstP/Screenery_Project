@@ -36,18 +36,18 @@ export type ImageElementType = ElementType & {
 export type GraphicElementType = ElementType & {
   Type: "graphic";
   PrimitivesVariant: "rectangle" | "ellipse" | "triangle";
+  readonly Src: string;
   Color: string;
 };
 
-export type generalElementType =
-  | ElementType
+export type GeneralElementType =
   | TextElementType
   | ImageElementType
   | GraphicElementType;
 
 export type SlideType = {
   ID: number;
-  List_of_Elements: generalElementType[];
+  List_of_Elements: GeneralElementType[];
   Background: string;
   Color: string;
 };

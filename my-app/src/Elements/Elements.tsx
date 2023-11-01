@@ -1,23 +1,75 @@
 import React from "react";
-import { ElementType } from "../ts/types/types";
-import "./Elements.css";
+import {
+  GeneralElementType,
+  TextElementType,
+  ImageElementType,
+  GraphicElementType,
+} from "../ts/types/types";
+import Styles from "./Elements.module.css";
 
-function RenderElements(Elements: ElementType[]) {
+function ShowTextElement(Element: TextElementType) {
   return (
-    <div className="elements">
-      {Elements.map((element) => (
-        <p
-          className="element"
-          style={{
-            top: element.Position.X + "%",
-            left: element.Position.Y + "%",
-          }}
-        >
-          {element.Type}
-        </p>
-      ))}
-    </div>
+    <p
+      className={Styles.element}
+      style={{
+        top: Element.Position.Y + "%",
+        left: Element.Position.X + "%",
+        width: Element.Scale.Wigth + "%",
+        height: Element.Scale.Height + "%",
+        fontFamily: Element.Font.FontFamily,
+        fontSize: Element.Font.FontSize + "%",
+        fontStyle: Element.Font.FontStyle,
+        color: Element.Font.Color,
+      }}
+    >
+      {Element.Text}
+    </p>
   );
+}
+
+function ShowImageElement(Element: ImageElementType) {
+  return (
+    <img
+      className={Styles.element}
+      src={Element.Src}
+      style={{
+        top: Element.Position.Y + "%",
+        left: Element.Position.X + "%",
+        width: Element.Scale.Wigth + "%",
+        height: Element.Scale.Height + "%",
+      }}
+    ></img>
+  );
+}
+
+function ShowGraphicElement(Element: GraphicElementType) {
+  return (
+    <img
+      className={Styles.element}
+      src={Element.Src}
+      style={{
+        top: Element.Position.Y + "%",
+        left: Element.Position.X + "%",
+        width: Element.Scale.Wigth + "%",
+        height: Element.Scale.Height + "%",
+      }}
+    ></img>
+  );
+}
+
+function SelectTypeOfElement(Element: GeneralElementType) {
+  switch (Element.Type) {
+    case "text":
+      return ShowTextElement(Element);
+    case "image":
+      return ShowImageElement(Element);
+    case "graphic":
+      return ShowGraphicElement(Element);
+  }
+}
+
+function RenderElements(Elements: GeneralElementType[]) {
+  return <div>{Elements.map((element) => SelectTypeOfElement(element))}</div>;
 }
 
 export default RenderElements;

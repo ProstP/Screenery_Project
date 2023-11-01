@@ -1,7 +1,7 @@
 import React from "react";
 import { Editor } from "../ts/const/const";
 import RenderSlides from "../Slides/Slides";
-import "./Editor.css";
+import Styles from "./Editor.module.css";
 import RenderElements from "../Elements/Elements";
 import Background from "../img/background.png";
 import Logo from "../img/screenery_logo_1.png";
@@ -14,13 +14,15 @@ function RenderEditor() {
   );
 
   return (
-    <div className="editor">
-      <img className="background" src={Background}></img>
-      <img className="logo" src={Logo}></img>
-      <p className="name">{Editor.Presentation.Name}</p>
-      <div className="slides">{slides}</div>
+    <div className={Styles.editor}>
+      <img className={Styles.background} src={Background}></img>
+      <img className={Styles.logo} src={Logo}></img>
+      <div className={Styles.nameblock}>
+        <p className={Styles.name}>{Editor.Presentation.Name}</p>
+      </div>
+      <div className={Styles.slides}>{slides}</div>
       <div
-        className="workplace"
+        className={Styles.workplace}
         style={{
           backgroundColor:
             Editor.Presentation.ListOfSlides[Editor.Presentation.CurentSlide]
