@@ -17,15 +17,15 @@ import square from "../../img/square.png";
 export const TextElt: TextElementType = {
   Type: "text",
   ID: 0,
-  Text: "New Text",
+  Text: "New Текст",
   Font: {
     Color: "black",
-    FontSize: 25,
+    FontSize: 100,
     FontFamily: "Arial",
     FontStyle: "normal",
   },
   Position: {
-    X: 20,
+    X: 15,
     Y: 10,
   },
   Scale: {
@@ -68,14 +68,14 @@ export const EllipseElt: GraphicElementType = {
   Type: "graphic",
   PrimitivesVariant: "ellipse",
   Color: "black",
-  Src: circle,
   ID: 0,
+  Src: circle,
   Position: {
-    X: 34,
-    Y: 73,
+    X: 13,
+    Y: 25,
   },
   Scale: {
-    Wigth: 20,
+    Wigth: 40,
     Height: 10,
   },
 };

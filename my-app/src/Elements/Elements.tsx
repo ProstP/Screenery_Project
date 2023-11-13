@@ -38,7 +38,7 @@ function ShowImageElement(Element: ImageElementType) {
         width: Element.Scale.Wigth + "%",
         height: Element.Scale.Height + "%",
       }}
-    ></img>
+    />
   );
 }
 
@@ -53,7 +53,7 @@ function ShowGraphicElement(Element: GraphicElementType) {
         width: Element.Scale.Wigth + "%",
         height: Element.Scale.Height + "%",
       }}
-    ></img>
+    />
   );
 }
 
