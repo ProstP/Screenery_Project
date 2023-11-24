@@ -35,7 +35,7 @@ const LoadFromJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const jsonData = e.target?.result as string;
       const data: EditorType = JSON.parse(jsonData);
-      console.log(data.Presentation.Name);
+      console.log(data);
     } catch (error) {
       console.error(error);
     }

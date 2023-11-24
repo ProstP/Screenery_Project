@@ -8,25 +8,14 @@ function RenderSlides(presentation: PresentationType) {
     <ul className={Styles.list}>
       {presentation.ListOfSlides.map((slide) => (
         <li>
-          {slide.ID == presentation.CurentSlide ? (
-            <div
-              className={Styles.current}
-              style={{
-                backgroundColor: slide.Color,
-              }}
-            >
-              {RenderElements(slide.List_of_Elements)}
-            </div>
-          ) : (
-            <div
-              className={Styles.slide}
-              style={{
-                backgroundColor: slide.Color,
-              }}
-            >
-              {RenderElements(slide.List_of_Elements)}
-            </div>
-          )}
+          <div
+            className={`${Styles.slide} ${Styles.current}`}
+            style={{
+              backgroundColor: slide.Color,
+            }}
+          >
+            {RenderElements(slide.List_of_Elements)}
+          </div>
         </li>
       ))}
     </ul>

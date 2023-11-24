@@ -13,9 +13,5 @@
 }
 
 .current {
-  position: relative;
-  width: 90%;
-  height: 14vh;
   border: 5px solid green;
-  margin-top: 5%;
 }
