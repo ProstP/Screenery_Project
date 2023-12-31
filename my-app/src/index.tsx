@@ -2,17 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import RenderEditor from "./Editor/Editor";
-import testValues from "./testValues";
 import reportWebVitals from "./reportWebVitals";
-
-testValues();
+import { Provider } from "react-redux";
+import { store } from "./Store/Store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 root.render(
   <React.StrictMode>
-    <RenderEditor />
+    <Provider store={store}>
+      <RenderEditor />
+    </Provider>
   </React.StrictMode>,
 );
 

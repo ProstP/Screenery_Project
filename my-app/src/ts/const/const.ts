@@ -10,9 +10,9 @@ import {
 
 import cate from "../../img/kote.jpg";
 
-import circle from "../../img/circle.png";
-import triangle from "../../img/triangle.png";
-import square from "../../img/square.png";
+import circle from "../../svg/circle.svg";
+import triangle from "../../svg/triangle.svg";
+import square from "../../svg/square.svg";
 
 export const TextElt: TextElementType = {
   Type: "text",
@@ -20,7 +20,7 @@ export const TextElt: TextElementType = {
   Text: "New Текст",
   Font: {
     Color: "black",
-    FontSize: 100,
+    FontSize: 120,
     FontFamily: "Arial",
     FontStyle: "normal",
   },
@@ -39,7 +39,7 @@ export const ImageElt: ImageElementType = {
   ID: 0,
   Src: cate,
   Position: {
-    X: 11,
+    X: 20,
     Y: 23,
   },
   Scale: {
@@ -71,7 +71,7 @@ export const EllipseElt: GraphicElementType = {
   ID: 0,
   Src: circle,
   Position: {
-    X: 13,
+    X: 70,
     Y: 25,
   },
   Scale: {
@@ -88,7 +88,7 @@ export const TriangleElt: GraphicElementType = {
   ID: 0,
   Position: {
     X: 10,
-    Y: 70,
+    Y: 10,
   },
   Scale: {
     Wigth: 10,
@@ -102,22 +102,24 @@ export const HistoryOfActions: HistoryOfActionsType = {
 
 export const Slide: SlideType = {
   ID: 0,
-  List_of_Elements: [TextElt, ImageElt, RectangleElt, EllipseElt, TriangleElt],
+  List_of_Elements: [],
   Background: "",
   Color: "white",
 };
 
 export const Presentation: PresentationType = {
   Name: "New name",
-  CurentSlide: 0,
+  CurentSlide: "slide0",
   ListOfSlides: [Slide],
-  ListOfSelected: {
-    Slides: [],
-    Elements: [],
-  },
+  EltCounter: 0,
+  SlideCounter: 0,
 };
 
 export const Editor: EditorType = {
   Presentation: Presentation,
+  ListOfSelected: {
+    Slides: [],
+    Elements: [],
+  },
   History: HistoryOfActions,
 };

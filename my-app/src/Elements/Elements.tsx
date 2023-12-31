@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useRef } from "react";
 import {
   GeneralElementType,
   TextElementType,
@@ -6,70 +6,174 @@ import {
   GraphicElementType,
 } from "../ts/types/types";
 import Styles from "./Elements.module.css";
+import { useAppActions } from "../Actions/Actions";
 
-function ShowTextElement(Element: TextElementType) {
+type ShowTextElementProps = {
+  Elt: TextElementType;
+};
+
+type RenderElementsProps = {
+  Elements: GeneralElementType[];
+  Selected: string[];
+  forWb: boolean;
+};
+
+type createElementProps = {
+  elt: GeneralElementType;
+  Elements: GeneralElementType[];
+  Selected: string[];
+  forWb: boolean;
+};
+
+function ShowTextElement(props: ShowTextElementProps) {
+  const { Elt } = props;
+  const { setNewText } = useAppActions();
   return (
-    <p
-      className={Styles.element}
+    <input
+      type="text"
       style={{
-        top: Element.Position.Y + "%",
-        left: Element.Position.X + "%",
-        width: Element.Scale.Wigth + "%",
-        height: Element.Scale.Height + "%",
-        fontFamily: Element.Font.FontFamily,
-        fontSize: Element.Font.FontSize + "%",
-        fontStyle: Element.Font.FontStyle,
-        color: Element.Font.Color,
+        width: "100%",
+        height: "100%",
+        border: 0,
+        outlineWidth: 0,
+        fontFamily: Elt.Font.FontFamily,
+        fontSize: Elt.Font.FontSize + "%",
+        fontStyle: Elt.Font.FontStyle,
+        color: Elt.Font.Color,
       }}
-    >
-      {Element.Text}
-    </p>
+      value={Elt.Text}
+      onChange={(event) => setNewText(Elt.ID, event.target.value)}
+    ></input>
   );
 }
 
-function ShowImageElement(Element: ImageElementType) {
+function showImageElement(elt: ImageElementType) {
   return (
     <img
-      className={Styles.element}
-      src={Element.Src}
       style={{
-        top: Element.Position.Y + "%",
-        left: Element.Position.X + "%",
-        width: Element.Scale.Wigth + "%",
-        height: Element.Scale.Height + "%",
+        width: "100%",
+        height: "100%",
       }}
-    />
+      src={elt.Src}
+    ></img>
   );
 }
 
-function ShowGraphicElement(Element: GraphicElementType) {
+function showGraphicElement(elt: GraphicElementType) {
   return (
     <img
-      className={Styles.element}
-      src={Element.Src}
       style={{
-        top: Element.Position.Y + "%",
-        left: Element.Position.X + "%",
-        width: Element.Scale.Wigth + "%",
-        height: Element.Scale.Height + "%",
+        width: "100%",
+        height: "100%",
       }}
-    />
+      src={elt.Src}
+    ></img>
   );
 }
 
-function SelectTypeOfElement(Element: GeneralElementType) {
-  switch (Element.Type) {
+function selectTypeOfElement(elt: GeneralElementType) {
+  switch (elt.Type) {
     case "text":
-      return ShowTextElement(Element);
+      return <ShowTextElement Elt={elt} />;
     case "image":
-      return ShowImageElement(Element);
+      return showImageElement(elt);
     case "graphic":
-      return ShowGraphicElement(Element);
+      return showGraphicElement(elt);
   }
 }
 
-function RenderElements(Elements: GeneralElementType[]) {
-  return <div>{Elements.map((element) => SelectTypeOfElement(element))}</div>;
+function CreateElement(props: createElementProps) {
+  const { elt, Elements, Selected, forWb } = props;
+  const { addSelectedElement, moveElement } = useAppActions();
+  const ref = useRef<HTMLDivElement>(null);
+  const isSelected: boolean = Selected.indexOf("elt" + elt.ID) !== -1;
+  useEffect(() => {
+    const control = ref.current!;
+    if (control === null) {
+      return;
+    }
+    let isCtrlPressed = false;
+    const mouseDown = (mouseDownEvent: MouseEvent) => {
+      let x = 0;
+      let y = 0;
+
+      const onDrag = (dragEvent: MouseEvent) => {
+        const wb = document.getElementById("workplace");
+        if (wb === null || !isSelected) {
+          return;
+        }
+        x = ((dragEvent.x - mouseDownEvent.x) / wb.offsetWidth) * 100;
+        y = ((dragEvent.y - mouseDownEvent.y) / wb.offsetHeight) * 100;
+        Selected.forEach((id) => {
+          const htmlElt = document.getElementById(id);
+          const elt = Elements.find((element) => "elt" + element.ID === id);
+          if (htmlElt !== null && elt !== undefined) {
+            htmlElt.style.left = `${elt.Position.X + x}%`;
+            htmlElt.style.top = `${elt.Position.Y + y}%`;
+          }
+        });
+      };
+
+      const onDrop = () => {
+        if ((x === 0 && y === 0) || !isSelected) {
+          addSelectedElement(control.id, !isCtrlPressed);
+        } else {
+          moveElement(x, y, Selected);
+        }
+        window.removeEventListener("mousemove", onDrag);
+        window.removeEventListener("mouseup", onDrop);
+      };
+
+      window.addEventListener("mousemove", onDrag);
+      window.addEventListener("mouseup", onDrop);
+    };
+
+    const ctrlHandled = (event: KeyboardEvent) => {
+      isCtrlPressed = event.ctrlKey;
+    };
+
+    control.addEventListener("mousedown", mouseDown);
+    window.addEventListener("keydown", ctrlHandled);
+    window.addEventListener("keyup", ctrlHandled);
+    return () => {
+      control.removeEventListener("mousedown", mouseDown);
+      window.removeEventListener("keydown", ctrlHandled);
+      window.removeEventListener("keyup", ctrlHandled);
+    };
+  });
+  return (
+    <div
+      id={forWb ? "elt" + elt.ID : "eltOnSlide" + elt.ID}
+      ref={forWb ? ref : null}
+      className={
+        isSelected ? `${Styles.element} ${Styles.selected}` : Styles.element
+      }
+      style={{
+        top: elt.Position.Y + "%",
+        left: elt.Position.X + "%",
+        width: elt.Scale.Wigth + "%",
+        height: elt.Scale.Height + "%",
+      }}
+    >
+      {selectTypeOfElement(elt)}
+    </div>
+  );
+}
+
+function RenderElements(props: RenderElementsProps) {
+  const { Elements, Selected, forWb } = props;
+  return (
+    <div>
+      {Elements.map((element) => (
+        <CreateElement
+          elt={element}
+          Elements={Elements}
+          Selected={Selected}
+          forWb={forWb}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default RenderElements;

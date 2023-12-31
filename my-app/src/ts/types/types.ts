@@ -17,7 +17,6 @@ export type FontType = {
 
 export type ElementType = {
   ID: number;
-  Type: string;
   Position: PositionType;
   Scale: ScaleType;
 };
@@ -53,15 +52,16 @@ export type SlideType = {
 };
 
 export type ListOfSelectedType = {
-  Slides: SlideType[];
-  Elements: ElementType[];
+  Slides: string[];
+  Elements: string[];
 };
 
 export type PresentationType = {
   Name: string;
-  CurentSlide: number;
+  CurentSlide: string;
   ListOfSlides: SlideType[];
-  ListOfSelected: ListOfSelectedType;
+  EltCounter: number;
+  SlideCounter: number;
 };
 
 export type HistoryOfActionsType = {
@@ -70,5 +70,6 @@ export type HistoryOfActionsType = {
 
 export type EditorType = {
   Presentation: PresentationType;
+  ListOfSelected: ListOfSelectedType;
   History: HistoryOfActionsType;
 };
