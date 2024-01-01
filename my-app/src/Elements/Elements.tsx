@@ -8,7 +8,6 @@ import {
   ListOfSelectedType,
 } from "../ts/types/types";
 import Styles from "./Elements.module.css";
-import { useAppActions } from "../Actions/Actions";
 
 type ShowTextElementProps = {
   element: TextElementType;
@@ -36,8 +35,7 @@ type RenderElementsProps = {
 };
 
 function ShowTextElement(props: ShowTextElementProps) {
-  const { element: Elt } = props;
-  const { setNewText } = useAppActions();
+  const { element, presentation, setPresentation } = props;
   return (
     <input
       type="text"
@@ -46,14 +44,31 @@ function ShowTextElement(props: ShowTextElementProps) {
         height: "100%",
         border: 0,
         outlineWidth: 0,
-        fontFamily: Elt.Font.FontFamily,
-        fontSize: Elt.Font.FontSize + "%",
-        fontStyle: Elt.Font.FontStyle,
-        color: Elt.Font.Color,
+        fontFamily: element.Font.FontFamily,
+        fontSize: element.Font.FontSize + "%",
+        fontStyle: element.Font.FontStyle,
+        color: element.Font.Color,
         background: "transparent",
       }}
-      value={Elt.Text}
-      onChange={(event) => setNewText(Elt.ID, event.target.value)}
+      value={element.Text}
+      onChange={(event) => {
+        const slides = presentation.ListOfSlides;
+        const current = slides.find(
+          (slide) => "slide" + slide.ID === presentation.CurentSlide,
+        );
+        if (current === undefined) {
+          return;
+        }
+        const elt = current.ListOfElements.find((e) => (e.ID = element.ID));
+        if (elt === undefined || elt.Type !== "text") {
+          return;
+        }
+        elt.Text = event.target.value;
+        setPresentation({
+          ...presentation,
+          ListOfSlides: slides,
+        });
+      }}
     ></input>
   );
 }
@@ -137,7 +152,6 @@ function CreateElement(props: createElementProps) {
           const htmlElt = document.getElementById(id);
           const elt = elements.find((element) => "elt" + element.ID === id);
           if (htmlElt !== null && elt !== undefined) {
-            htmlElt.style.zIndex = "5";
             htmlElt.style.left = `${elt.Position.X + x}%`;
             htmlElt.style.top = `${elt.Position.Y + y}%`;
           }
@@ -205,7 +219,7 @@ function CreateElement(props: createElementProps) {
         isSelected ? `${Styles.element} ${Styles.selected}` : Styles.element
       }
       style={{
-        zIndex: "2",
+        zIndex: isSelected ? "5" : "2",
         top: element.Position.Y + "%",
         left: element.Position.X + "%",
         width: element.Scale.Wigth + "%",
