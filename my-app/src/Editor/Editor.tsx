@@ -4,12 +4,12 @@ import Styles from "./Editor.module.css";
 import RenderElements from "../Elements/Elements";
 import Background from "../img/background.png";
 import Logo from "../img/screenery_logo_1.png";
-import { useAppSelector } from "../Store/Reducer";
-import { useAppActions } from "../Actions/Actions";
 import findSlideById from "../Slides/FindSlideById";
 import { BtnsCreator } from "../btnsCreator/btnsCreator";
 import { newSlide } from "../Slides/SlidesCreator";
 import { EltFeatures } from "../EltFeatures/EltFeatures";
+import { useState } from "react";
+import { Editor, Presentation } from "../ts/const/const";
 
 const SaveOnJSON = (Presentation: PresentationType) => {
   const jsonData = JSON.stringify(Presentation);
@@ -27,17 +27,8 @@ const SaveOnJSON = (Presentation: PresentationType) => {
 };
 
 function RenderEditor() {
-  const {
-    changePresentationName,
-    goToSlideAction,
-    setSlides,
-    addSlideAction,
-    deleteSlides,
-    changeBackground,
-    changeSlideColor,
-  } = useAppActions();
-  const presentation = useAppSelector((state) => state.presentation);
-  const selected = useAppSelector((state) => state.selected);
+  const [selected, setSelected] = useState(Editor.ListOfSelected);
+  const [presentation, setPresentation] = useState(Presentation);
 
   const LoadFromJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) {
@@ -52,9 +43,7 @@ function RenderEditor() {
       try {
         const jsonData = e.target?.result as string;
         const data: PresentationType = JSON.parse(jsonData);
-        setSlides(data.ListOfSlides);
-        goToSlideAction(data.CurentSlide);
-        changePresentationName(data.Name);
+        setPresentation(data);
       } catch (error) {
         console.error(error);
       }
@@ -90,7 +79,20 @@ function RenderEditor() {
             findSlideById(presentation.ListOfSlides, presentation.CurentSlide)
               .Color
           }
-          onChange={(event) => changeSlideColor(event.target.value)}
+          onChange={(event) => {
+            const slides = presentation.ListOfSlides;
+            const current = slides.find(
+              (slide) => "slide" + slide.ID === presentation.CurentSlide,
+            );
+            if (current === undefined) {
+              return;
+            }
+            current.Color = event.target.value;
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+          }}
         ></input>
         <input
           id="changeBack"
@@ -107,7 +109,18 @@ function RenderEditor() {
             const reader = new FileReader();
             reader.onload = (e) => {
               try {
-                changeBackground(e.target!.result as string);
+                const slides = presentation.ListOfSlides;
+                const current = slides.find(
+                  (slide) => "slide" + slide.ID === presentation.CurentSlide,
+                );
+                if (current === undefined) {
+                  return;
+                }
+                current.Background = e.target!.result as string;
+                setPresentation({
+                  ...presentation,
+                  ListOfSlides: slides,
+                });
               } catch (error) {
                 console.error(error);
               }
@@ -119,14 +132,20 @@ function RenderEditor() {
           New background
         </button>
       </div>
-      <BtnsCreator />
+      <BtnsCreator
+        presentation={presentation}
+        setPresentation={setPresentation}
+      />
       {selected.Elements.length === 1 ? (
         <EltFeatures
-          Elt={
+          presentation={presentation}
+          setPresentation={setPresentation}
+          setSelected={setSelected}
+          elt={
             findSlideById(
               presentation.ListOfSlides,
               presentation.CurentSlide,
-            ).List_of_Elements.find(
+            ).ListOfElements.find(
               (elt) => "elt" + elt.ID === selected.Elements[0],
             )!
           }
@@ -139,14 +158,18 @@ function RenderEditor() {
         type="text"
         value={presentation.Name}
         onChange={(event) => {
-          changePresentationName(event.target.value);
+          setPresentation({
+            ...presentation,
+            Name: event.target.value,
+          });
         }}
       ></input>
       <div className={Styles.slides}>
         <RenderSlides
-          Slides={presentation.ListOfSlides}
-          Current={presentation.CurentSlide}
-          Selected={selected.Slides}
+          presentation={presentation}
+          selected={selected}
+          setPresentation={setPresentation}
+          setSelected={setSelected}
         />
       </div>
       <div
@@ -166,19 +189,55 @@ function RenderEditor() {
         }}
       >
         <RenderElements
-          Elements={
+          elements={
             findSlideById(presentation.ListOfSlides, presentation.CurentSlide)
-              .List_of_Elements
+              .ListOfElements
           }
-          Selected={selected.Elements}
+          presentation={presentation}
+          selected={selected}
+          setPresentation={setPresentation}
+          setSelected={setSelected}
           forWb={true}
         />
       </div>
       <div style={{ position: "absolute", bottom: "1%", left: "1%" }}>
-        <button onClick={() => addSlideAction(newSlide())}>
+        <button
+          onClick={() => {
+            const slides = presentation.ListOfSlides;
+            const slide = newSlide();
+            const counter = presentation.SlideCounter + 1;
+            slide.ID = counter;
+            slides.push(slide);
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+              SlideCounter: counter,
+            });
+          }}
+        >
           Add new slide
         </button>
-        <button onClick={() => deleteSlides(selected.Slides)}>
+        <button
+          onClick={() => {
+            const slides = presentation.ListOfSlides;
+            selected.Slides.forEach((id) => {
+              slides.splice(
+                slides.indexOf(
+                  slides.find((slide) => "slide" + slide.ID === id)!,
+                ),
+                1,
+              );
+            });
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+            setSelected({
+              Slides: [],
+              Elements: [],
+            });
+          }}
+        >
           Delete slide
         </button>
       </div>

@@ -4,29 +4,39 @@ import {
   TextElementType,
   ImageElementType,
   GraphicElementType,
+  PresentationType,
+  ListOfSelectedType,
 } from "../ts/types/types";
 import Styles from "./Elements.module.css";
 import { useAppActions } from "../Actions/Actions";
 
 type ShowTextElementProps = {
-  Elt: TextElementType;
-};
-
-type RenderElementsProps = {
-  Elements: GeneralElementType[];
-  Selected: string[];
-  forWb: boolean;
+  element: TextElementType;
+  presentation: PresentationType;
+  setPresentation: (presentation: PresentationType) => void;
 };
 
 type createElementProps = {
-  elt: GeneralElementType;
-  Elements: GeneralElementType[];
-  Selected: string[];
+  element: GeneralElementType;
+  elements: GeneralElementType[];
+  presentation: PresentationType;
+  selected: ListOfSelectedType;
+  setPresentation: (presentation: PresentationType) => void;
+  setSelected: (selected: ListOfSelectedType) => void;
+  forWb: boolean;
+};
+
+type RenderElementsProps = {
+  elements: GeneralElementType[];
+  presentation: PresentationType;
+  selected: ListOfSelectedType;
+  setPresentation: (presentation: PresentationType) => void;
+  setSelected: (selected: ListOfSelectedType) => void;
   forWb: boolean;
 };
 
 function ShowTextElement(props: ShowTextElementProps) {
-  const { Elt } = props;
+  const { element: Elt } = props;
   const { setNewText } = useAppActions();
   return (
     <input
@@ -40,6 +50,7 @@ function ShowTextElement(props: ShowTextElementProps) {
         fontSize: Elt.Font.FontSize + "%",
         fontStyle: Elt.Font.FontStyle,
         color: Elt.Font.Color,
+        background: "transparent",
       }}
       value={Elt.Text}
       onChange={(event) => setNewText(Elt.ID, event.target.value)}
@@ -71,10 +82,20 @@ function showGraphicElement(elt: GraphicElementType) {
   );
 }
 
-function selectTypeOfElement(elt: GeneralElementType) {
+function selectTypeOfElement(
+  elt: GeneralElementType,
+  presentation: PresentationType,
+  setPresentation: (presentation: PresentationType) => void,
+) {
   switch (elt.Type) {
     case "text":
-      return <ShowTextElement Elt={elt} />;
+      return (
+        <ShowTextElement
+          element={elt}
+          presentation={presentation}
+          setPresentation={setPresentation}
+        />
+      );
     case "image":
       return showImageElement(elt);
     case "graphic":
@@ -83,10 +104,18 @@ function selectTypeOfElement(elt: GeneralElementType) {
 }
 
 function CreateElement(props: createElementProps) {
-  const { elt, Elements, Selected, forWb } = props;
-  const { addSelectedElement, moveElement } = useAppActions();
+  const {
+    element,
+    elements,
+    presentation,
+    selected,
+    setPresentation,
+    setSelected,
+    forWb,
+  } = props;
   const ref = useRef<HTMLDivElement>(null);
-  const isSelected: boolean = Selected.indexOf("elt" + elt.ID) !== -1;
+  const isSelected: boolean =
+    selected.Elements.indexOf("elt" + element.ID) !== -1;
   useEffect(() => {
     const control = ref.current!;
     if (control === null) {
@@ -104,10 +133,11 @@ function CreateElement(props: createElementProps) {
         }
         x = ((dragEvent.x - mouseDownEvent.x) / wb.offsetWidth) * 100;
         y = ((dragEvent.y - mouseDownEvent.y) / wb.offsetHeight) * 100;
-        Selected.forEach((id) => {
+        selected.Elements.forEach((id) => {
           const htmlElt = document.getElementById(id);
-          const elt = Elements.find((element) => "elt" + element.ID === id);
+          const elt = elements.find((element) => "elt" + element.ID === id);
           if (htmlElt !== null && elt !== undefined) {
+            htmlElt.style.zIndex = "5";
             htmlElt.style.left = `${elt.Position.X + x}%`;
             htmlElt.style.top = `${elt.Position.Y + y}%`;
           }
@@ -116,9 +146,35 @@ function CreateElement(props: createElementProps) {
 
       const onDrop = () => {
         if ((x === 0 && y === 0) || !isSelected) {
-          addSelectedElement(control.id, !isCtrlPressed);
+          if (isCtrlPressed) {
+            setSelected({
+              Slides: [],
+              Elements: [...selected.Elements, control.id],
+            });
+          } else {
+            setSelected({
+              Slides: [],
+              Elements: [control.id],
+            });
+          }
         } else {
-          moveElement(x, y, Selected);
+          const slides = presentation.ListOfSlides;
+          for (let i = 0; i < slides.length; i++) {
+            for (let j = 0; j < slides[i].ListOfElements.length; j++) {
+              if (
+                selected.Elements.indexOf(
+                  "elt" + slides[i].ListOfElements[j].ID,
+                ) !== -1
+              ) {
+                slides[i].ListOfElements[j].Position.X += x;
+                slides[i].ListOfElements[j].Position.Y += y;
+              }
+            }
+          }
+          setPresentation({
+            ...presentation,
+            ListOfSlides: slides,
+          });
         }
         window.removeEventListener("mousemove", onDrag);
         window.removeEventListener("mouseup", onDrop);
@@ -143,32 +199,43 @@ function CreateElement(props: createElementProps) {
   });
   return (
     <div
-      id={forWb ? "elt" + elt.ID : "eltOnSlide" + elt.ID}
+      id={forWb ? "elt" + element.ID : "eltOnSlide" + element.ID}
       ref={forWb ? ref : null}
       className={
         isSelected ? `${Styles.element} ${Styles.selected}` : Styles.element
       }
       style={{
-        top: elt.Position.Y + "%",
-        left: elt.Position.X + "%",
-        width: elt.Scale.Wigth + "%",
-        height: elt.Scale.Height + "%",
+        zIndex: "2",
+        top: element.Position.Y + "%",
+        left: element.Position.X + "%",
+        width: element.Scale.Wigth + "%",
+        height: element.Scale.Height + "%",
       }}
     >
-      {selectTypeOfElement(elt)}
+      {selectTypeOfElement(element, presentation, setPresentation)}
     </div>
   );
 }
 
 function RenderElements(props: RenderElementsProps) {
-  const { Elements, Selected, forWb } = props;
+  const {
+    elements,
+    presentation,
+    selected,
+    setPresentation,
+    setSelected,
+    forWb,
+  } = props;
   return (
     <div>
-      {Elements.map((element) => (
+      {elements.map((element) => (
         <CreateElement
-          elt={element}
-          Elements={Elements}
-          Selected={Selected}
+          element={element}
+          elements={elements}
+          presentation={presentation}
+          selected={selected}
+          setPresentation={setPresentation}
+          setSelected={setSelected}
           forWb={forWb}
         />
       ))}

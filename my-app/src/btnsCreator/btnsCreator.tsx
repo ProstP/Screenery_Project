@@ -1,4 +1,3 @@
-import { useAppActions } from "../Actions/Actions";
 import {
   newTextElt,
   newImageElt,
@@ -6,39 +5,59 @@ import {
   newEllipseElt,
   newRectangleElt,
 } from "../ts/defaultElements";
+import { GeneralElementType, PresentationType } from "../ts/types/types";
 import Styles from "./btnsCreator.module.css";
 
-function BtnsCreator() {
-  const { addElementAction } = useAppActions();
+type BtnsCreatorProps = {
+  presentation: PresentationType;
+  setPresentation: (presentation: PresentationType) => void;
+};
+
+function BtnsCreator(props: BtnsCreatorProps) {
+  const { presentation: presentation, setPresentation } = props;
+  const addElement = (newElt: GeneralElementType) => {
+    const slides = presentation.ListOfSlides;
+    const counter = presentation.EltCounter + 1;
+    const current = slides.find(
+      (slide) => "slide" + slide.ID === presentation.CurentSlide,
+    );
+    newElt.ID = counter;
+    current?.ListOfElements.push(newElt);
+    setPresentation({
+      ...presentation,
+      EltCounter: counter,
+      ListOfSlides: slides,
+    });
+  };
   return (
     <div className={Styles.blockwithaddbtns}>
       <button
         className={Styles.addbtns}
-        onClick={() => addElementAction(newTextElt())}
+        onClick={() => addElement(newTextElt())}
       >
         AddText
       </button>
       <button
         className={Styles.addbtns}
-        onClick={() => addElementAction(newImageElt())}
+        onClick={() => addElement(newImageElt())}
       >
         AddImg
       </button>
       <button
         className={Styles.addbtns}
-        onClick={() => addElementAction(newTriangleElt())}
+        onClick={() => addElement(newTriangleElt())}
       >
         AddTriangle
       </button>
       <button
         className={Styles.addbtns}
-        onClick={() => addElementAction(newRectangleElt())}
+        onClick={() => addElement(newRectangleElt())}
       >
         AddRectangle
       </button>
       <button
         className={Styles.addbtns}
-        onClick={() => addElementAction(newEllipseElt())}
+        onClick={() => addElement(newEllipseElt())}
       >
         AddEllipse
       </button>

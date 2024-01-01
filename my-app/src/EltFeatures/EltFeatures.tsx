@@ -1,20 +1,27 @@
-import { useAppActions } from "../Actions/Actions";
-import { GeneralElementType } from "../ts/types/types";
+import {
+  GeneralElementType,
+  ListOfSelectedType,
+  PresentationType,
+} from "../ts/types/types";
 
 type EltFeaturesProps = {
-  Elt: GeneralElementType;
+  presentation: PresentationType;
+  setPresentation: (presentation: PresentationType) => void;
+  setSelected: (selected: ListOfSelectedType) => void;
+  elt: GeneralElementType;
 };
 
 function EltFeatures(props: EltFeaturesProps) {
-  const { Elt } = props;
-  const {
-    moveElement,
-    changeScale,
-    setNewImage,
-    setNewFont,
-    deleteElement,
-    initSelected,
-  } = useAppActions();
+  const { presentation, setPresentation, elt, setSelected } = props;
+  const slides = presentation.ListOfSlides;
+  const currentSlide = slides.find(
+    (slide) => "slide" + slide.ID === presentation.CurentSlide,
+  );
+  const findEltById = () => {
+    return currentSlide?.ListOfElements.find(
+      (element) => element.ID === elt.ID,
+    );
+  };
   return (
     <div
       style={{
@@ -32,22 +39,34 @@ function EltFeatures(props: EltFeaturesProps) {
         <input
           style={{ width: "40%" }}
           type="number"
-          value={Elt.Position.X}
-          onChange={(event) =>
-            moveElement(Number(event.target.value) - Elt.Position.X, 0, [
-              "elt" + Elt.ID,
-            ])
-          }
+          value={elt.Position.X}
+          onChange={(event) => {
+            const element = findEltById();
+            if (element === undefined) {
+              return;
+            }
+            element.Position.X = Number(event.target.value);
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+          }}
         ></input>
         <input
           style={{ width: "40%" }}
           type="number"
-          value={Elt.Position.Y}
-          onChange={(event) =>
-            moveElement(0, Number(event.target.value) - Elt.Position.Y, [
-              "elt" + Elt.ID,
-            ])
-          }
+          value={elt.Position.Y}
+          onChange={(event) => {
+            const element = findEltById();
+            if (element === undefined) {
+              return;
+            }
+            element.Position.Y = Number(event.target.value);
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+          }}
         ></input>
       </div>
       <div>
@@ -55,21 +74,39 @@ function EltFeatures(props: EltFeaturesProps) {
         <input
           style={{ width: "40%" }}
           type="number"
-          value={Elt.Scale.Wigth}
-          onChange={(event) =>
-            changeScale(Elt.ID, Number(event.target.value), Elt.Scale.Height)
-          }
+          value={elt.Scale.Wigth}
+          onChange={(event) => {
+            const element = findEltById();
+            if (element === undefined) {
+              return;
+            }
+            element.Scale.Wigth = Number(event.target.value);
+
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+          }}
         ></input>
         <input
           style={{ width: "40%" }}
           type="number"
-          value={Elt.Scale.Height}
-          onChange={(event) =>
-            changeScale(Elt.ID, Elt.Scale.Wigth, Number(event.target.value))
-          }
+          value={elt.Scale.Height}
+          onChange={(event) => {
+            const element = findEltById();
+            if (element === undefined) {
+              return;
+            }
+            element.Scale.Height = Number(event.target.value);
+
+            setPresentation({
+              ...presentation,
+              ListOfSlides: slides,
+            });
+          }}
         ></input>
       </div>
-      {Elt.Type === "image" ? (
+      {elt.Type === "image" ? (
         <div>
           <input
             id="changeSrc"
@@ -86,7 +123,15 @@ function EltFeatures(props: EltFeaturesProps) {
               const reader = new FileReader();
               reader.onload = (e) => {
                 try {
-                  setNewImage(Elt.ID, e.target!.result as string);
+                  const element = findEltById();
+                  if (element === undefined || element.Type !== "image") {
+                    return;
+                  }
+                  element.Src = e.target?.result as string;
+                  setPresentation({
+                    ...presentation,
+                    ListOfSlides: slides,
+                  });
                 } catch (error) {
                   console.error(error);
                 }
@@ -102,63 +147,71 @@ function EltFeatures(props: EltFeaturesProps) {
           </button>
         </div>
       ) : null}
-      {Elt.Type === "text" ? (
+      {elt.Type === "text" ? (
         <div>
           <p style={{ color: "white" }}>Font:</p>
           <input
             style={{ width: "20%" }}
             type="text"
-            value={Elt.Font.FontFamily}
+            value={elt.Font.FontFamily}
             onChange={(event) => {
-              setNewFont(
-                Elt.ID,
-                event.target.value,
-                Elt.Font.FontStyle,
-                Elt.Font.FontSize,
-                Elt.Font.Color,
-              );
+              const element = findEltById();
+              if (element === undefined || element.Type !== "text") {
+                return;
+              }
+              element.Font.FontFamily = event.target.value;
+              setPresentation({
+                ...presentation,
+                ListOfSlides: slides,
+              });
             }}
           ></input>
           <input
             style={{ width: "20%" }}
             type="number"
-            value={Elt.Font.FontSize}
+            value={elt.Font.FontSize}
             onChange={(event) => {
-              setNewFont(
-                Elt.ID,
-                Elt.Font.FontFamily,
-                Elt.Font.FontStyle,
-                Number(event.target.value),
-                Elt.Font.Color,
-              );
+              const element = findEltById();
+              if (element === undefined || element.Type !== "text") {
+                return;
+              }
+              element.Font.FontSize = Number(event.target.value);
+              setPresentation({
+                ...presentation,
+                ListOfSlides: slides,
+              });
             }}
           ></input>
           <input
             style={{ width: "20%" }}
             type="text"
-            value={Elt.Font.FontStyle}
+            value={elt.Font.FontStyle}
             onChange={(event) => {
-              setNewFont(
-                Elt.ID,
-                Elt.Font.FontFamily,
-                event.target.value,
-                Elt.Font.FontSize,
-                Elt.Font.Color,
-              );
+              const element = findEltById();
+              if (element === undefined || element.Type !== "text") {
+                return;
+              }
+              element.Font.FontStyle = event.target.value;
+              setPresentation({
+                ...presentation,
+                ListOfSlides: slides,
+              });
             }}
           ></input>
           <input
             style={{ width: "20%" }}
             type="text"
-            value={Elt.Font.Color}
+            value={elt.Font.Color}
             onChange={(event) => {
-              setNewFont(
-                Elt.ID,
-                Elt.Font.FontFamily,
-                Elt.Font.FontStyle,
-                Elt.Font.FontSize,
-                event.target.value,
-              );
+              const element = findEltById();
+              if (element === undefined || element.Type !== "text") {
+                return;
+              }
+              element.Font.Color = event.target.value;
+              setPresentation({
+                ...presentation,
+                ListOfSlides: slides,
+              });
             }}
           ></input>
         </div>
@@ -166,8 +219,23 @@ function EltFeatures(props: EltFeaturesProps) {
       <button
         style={{ width: "30%" }}
         onClick={() => {
-          deleteElement(Elt.ID);
-          initSelected();
+          const element = findEltById();
+          if (element === undefined) {
+            return;
+          }
+          const eltPos = currentSlide?.ListOfElements.indexOf(element);
+          if (eltPos === undefined) {
+            return;
+          }
+          currentSlide?.ListOfElements.splice(eltPos, 1);
+          setPresentation({
+            ...presentation,
+            ListOfSlides: slides,
+          });
+          setSelected({
+            Elements: [],
+            Slides: [],
+          });
         }}
       >
         Remove

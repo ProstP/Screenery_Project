@@ -46,7 +46,7 @@ export type GeneralElementType =
 
 export type SlideType = {
   ID: number;
-  List_of_Elements: GeneralElementType[];
+  ListOfElements: GeneralElementType[];
   Background: string;
   Color: string;
 };

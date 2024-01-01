@@ -102,7 +102,7 @@ export const HistoryOfActions: HistoryOfActionsType = {
 
 export const Slide: SlideType = {
   ID: 0,
-  List_of_Elements: [],
+  ListOfElements: [],
   Background: "",
   Color: "white",
 };

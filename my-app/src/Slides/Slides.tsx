@@ -1,28 +1,34 @@
-import React, { useEffect, useRef } from "react";
-import { SlideType } from "../ts/types/types";
+import { useEffect, useRef } from "react";
+import {
+  ListOfSelectedType,
+  PresentationType,
+  SlideType,
+} from "../ts/types/types";
 import RenderElements from "../Elements/Elements";
 import Styles from "./Slides.module.css";
-import { useAppActions } from "../Actions/Actions";
 
 type RenderSlidesProps = {
-  Slides: SlideType[];
-  Current: string;
-  Selected: string[];
+  presentation: PresentationType;
+  selected: ListOfSelectedType;
+  setPresentation: (presentation: PresentationType) => void;
+  setSelected: (selected: ListOfSelectedType) => void;
 };
 
 type ShowSlideProps = {
-  Slide: SlideType;
-  Slides: SlideType[];
-  Current: string;
-  Selected: string[];
+  slide: SlideType;
+  presentation: PresentationType;
+  selected: ListOfSelectedType;
+  setPresentation: (presentation: PresentationType) => void;
+  setSelected: (selected: ListOfSelectedType) => void;
 };
 
 function ShowSlide(props: ShowSlideProps) {
-  const { Slide, Slides, Current, Selected } = props;
-  const { goToSlideAction, addSelectedSlide, changeOrders } = useAppActions();
+  const { slide, presentation, selected, setPresentation, setSelected } = props;
   const ref = useRef<HTMLDivElement>(null);
-  const isSelected: boolean = Selected.indexOf("slide" + Slide.ID) !== -1;
-  const isCurrent: boolean = "slide" + Slide.ID === Current;
+  const isSelected: boolean =
+    selected.Slides.indexOf("slide" + slide.ID) !== -1;
+  const isCurrent: boolean = "slide" + slide.ID === presentation.CurentSlide;
+  const slides = presentation.ListOfSlides;
 
   useEffect(() => {
     const control = ref.current;
@@ -39,7 +45,7 @@ function ShowSlide(props: ShowSlideProps) {
           return;
         }
         y = dragEvent.clientY - mouseDownEvent.clientY;
-        Selected.forEach((id) => {
+        selected.Slides.forEach((id) => {
           const htmlElt = document.getElementById(id);
           if (htmlElt !== null) {
             htmlElt.style.zIndex = "5";
@@ -52,23 +58,33 @@ function ShowSlide(props: ShowSlideProps) {
         let minIndexFrom: number = -1;
         let minIndexTo: number = -1;
         if (y === 0 || !isSelected) {
-          addSelectedSlide(control.id, !isCtrlPressed);
+          if (isCtrlPressed) {
+            setSelected({
+              Slides: [...selected.Slides, control.id],
+              Elements: [],
+            });
+          } else {
+            setSelected({
+              Slides: [control.id],
+              Elements: [],
+            });
+          }
         } else {
-          Selected.forEach((id) => {
+          selected.Slides.forEach((id) => {
             const htmlElt = document.getElementById(id);
             if (minY === -1 || minY > htmlElt!.offsetTop) {
               minY = htmlElt!.offsetTop;
-              minIndexFrom = Slides.indexOf(
-                Slides.find((slide) => "slide" + slide.ID === id)!,
+              minIndexFrom = slides.indexOf(
+                slides.find((slide) => "slide" + slide.ID === id)!,
               );
             }
           });
           if (minY !== -1) {
-            for (let i = 0; i < Slides.length; i++) {
-              if (Selected.indexOf("slide" + Slides[i].ID) !== -1) {
+            for (let i = 0; i < slides.length; i++) {
+              if (selected.Slides.indexOf("slide" + slides[i].ID) !== -1) {
                 continue;
               }
-              const htmlElt = document.getElementById("slide" + Slides[i].ID);
+              const htmlElt = document.getElementById("slide" + slides[i].ID);
               if (minY < htmlElt!.offsetTop + htmlElt!.offsetHeight / 2) {
                 if (i < minIndexTo || minIndexTo === -1) {
                   minIndexTo = i;
@@ -78,9 +94,24 @@ function ShowSlide(props: ShowSlideProps) {
           }
         }
         if (minY !== -1) {
-          changeOrders(minIndexFrom, minIndexTo, Selected.length);
+          console.log(minIndexFrom, minIndexTo);
+          const deleted = slides.splice(minIndexFrom, selected.Slides.length);
+          const newState = presentation;
+          if (minIndexTo === -1) {
+            const newSlideList = [...slides, ...deleted];
+            newState.ListOfSlides = newSlideList;
+            console.log(newSlideList, newState);
+            setPresentation(newState);
+          }
+          const to =
+            minIndexTo >= minIndexFrom
+              ? minIndexTo - selected.Slides.length
+              : minIndexTo;
+          const firstPart = slides.splice(0, to);
+          newState.ListOfSlides = [...firstPart, ...deleted, ...slides];
+          setPresentation(newState);
         }
-        Selected.forEach((id) => {
+        selected.Slides.forEach((id) => {
           const elt = document.getElementById(id);
           if (elt !== null) {
             elt.style.visibility = "visible";
@@ -88,7 +119,10 @@ function ShowSlide(props: ShowSlideProps) {
             elt.style.zIndex = "2";
           }
         });
-        goToSlideAction(control.id);
+        setPresentation({
+          ...presentation,
+          CurentSlide: control.id,
+        });
         window.removeEventListener("mousemove", onDrag);
         window.removeEventListener("mouseup", onDrop);
       };
@@ -110,7 +144,7 @@ function ShowSlide(props: ShowSlideProps) {
   });
   return (
     <div
-      id={"slide" + Slide.ID}
+      id={"slide" + slide.ID}
       ref={ref}
       className={
         isSelected || isCurrent
@@ -118,16 +152,19 @@ function ShowSlide(props: ShowSlideProps) {
           : `${Styles.slide}`
       }
       style={{
-        backgroundColor: Slide.Color,
-        backgroundImage: `url(${Slide.Background})`,
+        backgroundColor: slide.Color,
+        backgroundImage: `url(${slide.Background})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         visibility: "visible",
       }}
     >
       <RenderElements
-        Elements={Slide.List_of_Elements}
-        Selected={[]}
+        elements={slide.ListOfElements}
+        presentation={presentation}
+        selected={{ Slides: [], Elements: [] }}
+        setPresentation={setPresentation}
+        setSelected={setSelected}
         forWb={false}
       />
     </div>
@@ -135,15 +172,16 @@ function ShowSlide(props: ShowSlideProps) {
 }
 
 function RenderSlides(props: RenderSlidesProps) {
-  const { Slides, Current, Selected } = props;
+  const { presentation, selected, setPresentation, setSelected } = props;
   return (
     <div id="slides" className={Styles.list}>
-      {Slides.map((slide) => (
+      {presentation.ListOfSlides.map((slide) => (
         <ShowSlide
-          Slide={slide}
-          Slides={Slides}
-          Current={Current}
-          Selected={Selected}
+          slide={slide}
+          presentation={presentation}
+          selected={selected}
+          setPresentation={setPresentation}
+          setSelected={setSelected}
         />
       ))}
     </div>
