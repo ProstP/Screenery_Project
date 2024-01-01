@@ -126,7 +126,7 @@ function ShowSlide(props: ShowSlideProps) {
       }}
     >
       <RenderElements
-        Elements={Slide.List_of_Elements}
+        Elements={Slide.ListOfElements}
         Selected={[]}
         forWb={false}
       />

@@ -126,7 +126,7 @@ function RenderEditor() {
             findSlideById(
               presentation.ListOfSlides,
               presentation.CurentSlide,
-            ).List_of_Elements.find(
+            ).ListOfElements.find(
               (elt) => "elt" + elt.ID === selected.Elements[0],
             )!
           }
@@ -168,7 +168,7 @@ function RenderEditor() {
         <RenderElements
           Elements={
             findSlideById(presentation.ListOfSlides, presentation.CurentSlide)
-              .List_of_Elements
+              .ListOfElements
           }
           Selected={selected.Elements}
           forWb={true}

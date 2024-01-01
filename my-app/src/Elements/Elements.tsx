@@ -40,6 +40,7 @@ function ShowTextElement(props: ShowTextElementProps) {
         fontSize: Elt.Font.FontSize + "%",
         fontStyle: Elt.Font.FontStyle,
         color: Elt.Font.Color,
+        background: "transparent",
       }}
       value={Elt.Text}
       onChange={(event) => setNewText(Elt.ID, event.target.value)}
@@ -149,6 +150,7 @@ function CreateElement(props: createElementProps) {
         isSelected ? `${Styles.element} ${Styles.selected}` : Styles.element
       }
       style={{
+        zIndex: isSelected ? "5" : "2",
         top: elt.Position.Y + "%",
         left: elt.Position.X + "%",
         width: elt.Scale.Wigth + "%",

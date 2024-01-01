@@ -38,14 +38,14 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
   switch (action.type) {
     case ElementsActionEnum.MOVE_ELEMENT:
       for (let i = 0; i < slides.length; i++) {
-        for (let j = 0; j < slides[i].List_of_Elements.length; j++) {
+        for (let j = 0; j < slides[i].ListOfElements.length; j++) {
           if (
             action.payload.ids.indexOf(
-              "elt" + slides[i].List_of_Elements[j].ID,
+              "elt" + slides[i].ListOfElements[j].ID,
             ) !== -1
           ) {
-            slides[i].List_of_Elements[j].Position.X += action.payload.x;
-            slides[i].List_of_Elements[j].Position.Y += action.payload.y;
+            slides[i].ListOfElements[j].Position.X += action.payload.x;
+            slides[i].ListOfElements[j].Position.Y += action.payload.y;
           }
         }
       }
@@ -62,7 +62,7 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
       counter++;
       elt = action.payload;
       elt.ID = counter;
-      slides[pos].List_of_Elements.push(elt);
+      slides[pos].ListOfElements.push(elt);
       return {
         ...state,
         ListOfSlides: slides,
@@ -74,12 +74,10 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
           break;
         }
       }
-      eltPos = slides[pos].List_of_Elements.indexOf(
-        slides[pos].List_of_Elements.find(
-          (elt) => elt.ID === action.payload.id,
-        )!,
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload.id)!,
       );
-      slides[pos].List_of_Elements[eltPos].Scale = {
+      slides[pos].ListOfElements[eltPos].Scale = {
         Wigth: action.payload.width,
         Height: action.payload.height,
       };
@@ -93,12 +91,10 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
           break;
         }
       }
-      eltPos = slides[pos].List_of_Elements.indexOf(
-        slides[pos].List_of_Elements.find(
-          (elt) => elt.ID === action.payload.id,
-        )!,
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload.id)!,
       );
-      elt = slides[pos].List_of_Elements[eltPos];
+      elt = slides[pos].ListOfElements[eltPos];
       if (elt.Type === "image") {
         elt.Src = action.payload.src;
       }
@@ -112,12 +108,10 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
           break;
         }
       }
-      eltPos = slides[pos].List_of_Elements.indexOf(
-        slides[pos].List_of_Elements.find(
-          (elt) => elt.ID === action.payload.id,
-        )!,
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload.id)!,
       );
-      elt = slides[pos].List_of_Elements[eltPos];
+      elt = slides[pos].ListOfElements[eltPos];
       if (elt.Type === "text") {
         elt.Font = {
           FontFamily: action.payload.FontFamily,
@@ -136,10 +130,10 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
           break;
         }
       }
-      eltPos = slides[pos].List_of_Elements.indexOf(
-        slides[pos].List_of_Elements.find((elt) => elt.ID === action.payload)!,
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload)!,
       );
-      slides[pos].List_of_Elements.splice(eltPos, 1);
+      slides[pos].ListOfElements.splice(eltPos, 1);
       return {
         ...state,
         ListOfSlides: slides,
@@ -150,12 +144,10 @@ const elementReducer = (state: PresentationType, action: GeneralActionType) => {
           break;
         }
       }
-      eltPos = slides[pos].List_of_Elements.indexOf(
-        slides[pos].List_of_Elements.find(
-          (elt) => elt.ID === action.payload.id,
-        )!,
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload.id)!,
       );
-      elt = slides[pos].List_of_Elements[eltPos];
+      elt = slides[pos].ListOfElements[eltPos];
       if (elt.Type === "text") {
         elt.Text = action.payload.text;
       }
