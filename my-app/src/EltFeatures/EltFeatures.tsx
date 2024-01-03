@@ -205,7 +205,7 @@ function EltFeatures(props: EltFeaturesProps) {
           </select>
           <input
             style={{ width: "20%" }}
-            type="text"
+            type="color"
             value={elt.Font.Color}
             onChange={(event) => {
               const element = findEltById();
