@@ -14,7 +14,7 @@ import {
   TextDecorationEnum,
 } from "../ts/enum/FontEnum";
 
-const INTERVAL = 3;
+const INTERVAL = 5;
 
 type ShowTextElementProps = {
   element: TextElementType;
