@@ -73,7 +73,7 @@ function RenderEditor() {
       <div style={{ position: "absolute", top: "1%", left: "45%", zIndex: 2 }}>
         <p style={{ color: "white" }}>Background</p>
         <input
-          type="text"
+          type="color"
           style={{ width: "20%" }}
           value={
             findSlideById(presentation.ListOfSlides, presentation.CurentSlide)

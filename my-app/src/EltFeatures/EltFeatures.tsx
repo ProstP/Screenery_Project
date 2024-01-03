@@ -182,9 +182,8 @@ function EltFeatures(props: EltFeaturesProps) {
               });
             }}
           ></input>
-          <input
+          <select
             style={{ width: "20%" }}
-            type="text"
             value={elt.Font.FontStyle}
             onChange={(event) => {
               const element = findEltById();
@@ -197,7 +196,13 @@ function EltFeatures(props: EltFeaturesProps) {
                 ListOfSlides: slides,
               });
             }}
-          ></input>
+          >
+            <option value="normal">Normal</option>
+            <option value="bold">Bold</option>
+            <option value="italic">Italic</option>
+            <option value="underline">Underline</option>
+            <option value="line-through">ine-through</option>
+          </select>
           <input
             style={{ width: "20%" }}
             type="text"

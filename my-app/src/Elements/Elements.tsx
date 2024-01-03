@@ -8,6 +8,13 @@ import {
   ListOfSelectedType,
 } from "../ts/types/types";
 import Styles from "./Elements.module.css";
+import {
+  FontFamilyEnum,
+  FontWeightEnum,
+  TextDecorationEnum,
+} from "../ts/enum/FontEnum";
+
+const INTERVAL = 3;
 
 type ShowTextElementProps = {
   element: TextElementType;
@@ -46,7 +53,15 @@ function ShowTextElement(props: ShowTextElementProps) {
         outlineWidth: 0,
         fontFamily: element.Font.FontFamily,
         fontSize: element.Font.FontSize + "%",
-        fontStyle: element.Font.FontStyle,
+        fontStyle: FontFamilyEnum.includes(element.Font.FontStyle)
+          ? element.Font.FontStyle
+          : "normal",
+        fontWeight: FontWeightEnum.includes(element.Font.FontStyle)
+          ? element.Font.FontStyle
+          : "normal",
+        textDecoration: TextDecorationEnum.includes(element.Font.FontStyle)
+          ? element.Font.FontStyle
+          : "none",
         color: element.Font.Color,
         background: "transparent",
       }}
@@ -138,6 +153,31 @@ function CreateElement(props: createElementProps) {
     }
     let isCtrlPressed = false;
     const mouseDown = (mouseDownEvent: MouseEvent) => {
+      let resize: number = 0;
+      if (
+        mouseDownEvent.offsetX < INTERVAL &&
+        mouseDownEvent.offsetX > -INTERVAL
+      ) {
+        resize = 1;
+      }
+      if (
+        mouseDownEvent.offsetX < INTERVAL + control.offsetWidth &&
+        mouseDownEvent.offsetX > -INTERVAL + control.offsetWidth
+      ) {
+        resize = 2;
+      }
+      if (
+        mouseDownEvent.offsetY < INTERVAL &&
+        mouseDownEvent.offsetY > -INTERVAL
+      ) {
+        resize = 3;
+      }
+      if (
+        mouseDownEvent.offsetY < INTERVAL + control.offsetHeight &&
+        mouseDownEvent.offsetY > -INTERVAL + control.offsetHeight
+      ) {
+        resize = 4;
+      }
       let x = 0;
       let y = 0;
 
@@ -152,8 +192,25 @@ function CreateElement(props: createElementProps) {
           const htmlElt = document.getElementById(id);
           const elt = elements.find((element) => "elt" + element.ID === id);
           if (htmlElt !== null && elt !== undefined) {
-            htmlElt.style.left = `${elt.Position.X + x}%`;
-            htmlElt.style.top = `${elt.Position.Y + y}%`;
+            if (resize !== 0) {
+              if (resize === 1) {
+                htmlElt.style.left = `${elt.Position.X + x}%`;
+                htmlElt.style.width = `${elt.Scale.Wigth - x}%`;
+              }
+              if (resize === 2) {
+                htmlElt.style.width = `${elt.Scale.Wigth + x}%`;
+              }
+              if (resize === 3) {
+                htmlElt.style.top = `${elt.Position.Y + y}%`;
+                htmlElt.style.height = `${elt.Scale.Height - y}%`;
+              }
+              if (resize === 4) {
+                htmlElt.style.height = `${elt.Scale.Height + y}%`;
+              }
+            } else {
+              htmlElt.style.left = `${elt.Position.X + x}%`;
+              htmlElt.style.top = `${elt.Position.Y + y}%`;
+            }
           }
         });
       };
@@ -180,8 +237,24 @@ function CreateElement(props: createElementProps) {
                   "elt" + slides[i].ListOfElements[j].ID,
                 ) !== -1
               ) {
-                slides[i].ListOfElements[j].Position.X += x;
-                slides[i].ListOfElements[j].Position.Y += y;
+                if (resize === 0) {
+                  slides[i].ListOfElements[j].Position.X += x;
+                  slides[i].ListOfElements[j].Position.Y += y;
+                }
+                if (resize === 1) {
+                  slides[i].ListOfElements[j].Position.X += x;
+                  slides[i].ListOfElements[j].Scale.Wigth -= x;
+                }
+                if (resize === 2) {
+                  slides[i].ListOfElements[j].Scale.Wigth += x;
+                }
+                if (resize === 3) {
+                  slides[i].ListOfElements[j].Position.Y += y;
+                  slides[i].ListOfElements[j].Scale.Height -= y;
+                }
+                if (resize === 4) {
+                  slides[i].ListOfElements[j].Scale.Height += y;
+                }
               }
             }
           }
