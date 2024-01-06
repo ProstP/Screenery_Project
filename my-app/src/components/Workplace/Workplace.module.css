@@ -1,0 +1,9 @@
+.workplace {
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+  width: 78%;
+  height: 76%;
+  right: 5vh;
+  top: 13vh;
+}

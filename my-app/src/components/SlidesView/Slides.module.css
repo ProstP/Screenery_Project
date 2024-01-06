@@ -1,0 +1,23 @@
+.list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 14%;
+  height: 72%;
+  top: 20vh;
+  left: 1%;
+  list-style-type: none;
+  overflow-y: scroll;
+}
+
+.slide {
+  position: relative;
+  width: 90%;
+  height: 14vh;
+  border: 5px solid black;
+  margin-top: 5%;
+}
+
+.current {
+  border: 5px solid #00cc99;
+}

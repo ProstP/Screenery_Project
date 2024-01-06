@@ -1,0 +1,16 @@
+.name {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: 1%;
+  z-index: 2;
+  font-style: normal;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  margin-left: 50px;
+  margin-right: 50px;
+  background-color: black;
+  border-radius: 5px;
+  text-align: center;
+}
