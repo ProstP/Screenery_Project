@@ -6,4 +6,4 @@
     Баранов Антон,
     
   Дизайн:
-    https://www.figma.com/file/da6vtAxVJrY8FWjQ613SLP/Screenery---A-presentation-maker?type=design&node-id=0%3A1&mode=design&t=k70QykUEo4utB2f3-1
+    https://www.figma.com/file/Bjd4fNB1W1SF1rjGSixFPw/Screenery---A-presentation-maker-(Ver.-2)?type=design&node-id=0-1&mode=design
