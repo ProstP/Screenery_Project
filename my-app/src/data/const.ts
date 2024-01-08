@@ -2,25 +2,25 @@ import {
   TextElementType,
   ImageElementType,
   GraphicElementType,
-  HistoryOfActionsType,
-  SlideType,
-  PresentationType,
-  EditorType,
-} from "../types/types";
+} from "../model/Element";
+import { HistoryOfActionsType } from "../model/History";
+import { SlideType } from "../model/Slide";
+import { PresentationType } from "../model/Presentation";
+import { EditorType } from "../model/Editor";
 
-import cate from "../../img/kote.jpg";
+import cate from "../img/kote.jpg";
 
-import circle from "../../img/circle.png";
-import triangle from "../../img/triangle.png";
-import square from "../../img/square.png";
+import circle from "../svg/circle.svg";
+import triangle from "../svg/triangle.svg";
+import square from "../svg/square.svg";
 
 export const TextElt: TextElementType = {
+  ID: "",
   Type: "text",
-  ID: 0,
   Text: "New Текст",
   Font: {
     Color: "black",
-    FontSize: 100,
+    FontSize: 120,
     FontFamily: "Arial",
     FontStyle: "normal",
   },
@@ -35,11 +35,11 @@ export const TextElt: TextElementType = {
 };
 
 export const ImageElt: ImageElementType = {
+  ID: "",
   Type: "image",
-  ID: 0,
   Src: cate,
   Position: {
-    X: 11,
+    X: 20,
     Y: 23,
   },
   Scale: {
@@ -49,11 +49,11 @@ export const ImageElt: ImageElementType = {
 };
 
 export const RectangleElt: GraphicElementType = {
+  ID: "",
   Type: "graphic",
   PrimitivesVariant: "rectangle",
   Color: "black",
   Src: square,
-  ID: 0,
   Position: {
     X: 80,
     Y: 80,
@@ -65,13 +65,13 @@ export const RectangleElt: GraphicElementType = {
 };
 
 export const EllipseElt: GraphicElementType = {
+  ID: "",
   Type: "graphic",
   PrimitivesVariant: "ellipse",
   Color: "black",
-  ID: 0,
   Src: circle,
   Position: {
-    X: 13,
+    X: 70,
     Y: 25,
   },
   Scale: {
@@ -81,14 +81,14 @@ export const EllipseElt: GraphicElementType = {
 };
 
 export const TriangleElt: GraphicElementType = {
+  ID: "",
   Type: "graphic",
   PrimitivesVariant: "triangle",
   Color: "black",
   Src: triangle,
-  ID: 0,
   Position: {
     X: 10,
-    Y: 70,
+    Y: 10,
   },
   Scale: {
     Wigth: 10,
@@ -97,27 +97,30 @@ export const TriangleElt: GraphicElementType = {
 };
 
 export const HistoryOfActions: HistoryOfActionsType = {
-  Actions: [],
+  RedoActions: [],
+  UndoActions: [],
 };
 
 export const Slide: SlideType = {
-  ID: 0,
-  List_of_Elements: [TextElt, ImageElt, RectangleElt, EllipseElt, TriangleElt],
+  ID: "slide0",
+  ListOfElements: [],
   Background: "",
   Color: "white",
 };
 
 export const Presentation: PresentationType = {
   Name: "New name",
-  CurentSlide: 0,
+  CurentSlide: "slide0",
   ListOfSlides: [Slide],
-  ListOfSelected: {
-    Slides: [],
-    Elements: [],
-  },
+  EltCounter: 0,
+  SlideCounter: 0,
 };
 
 export const Editor: EditorType = {
   Presentation: Presentation,
+  ListOfSelected: {
+    Slides: [],
+    Elements: [],
+  },
   History: HistoryOfActions,
 };

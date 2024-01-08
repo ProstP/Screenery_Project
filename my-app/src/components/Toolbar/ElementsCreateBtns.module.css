@@ -1,0 +1,13 @@
+.blockwithaddbtns {
+  left: 22%;
+  top: 3%;
+  position: absolute;
+  display: flex;
+}
+
+.addbtns {
+  z-index: 2;
+  background-color: #00cc99;
+  border-radius: 4px;
+  color: white;
+}
