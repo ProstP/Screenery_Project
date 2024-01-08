@@ -11,19 +11,23 @@ import { Title } from "./components/Title/Title";
 import { SlidesView } from "./components/SlidesView/SlidesView";
 import { Workplace } from "./components/Workplace/Workplace";
 import { SlideCreateAndDeleteBtns } from "./components/Toolbar/SlideCreateDeleteBtns";
+import { ctlrHandled } from "./hooks/useCtrlLestener";
 
 function App() {
   const editor = useAppSelector((state) => state.editor);
+  ctlrHandled();
   return (
     <div className={Styles.editor}>
       <SaveAndLoadBtns Presentation={editor.Presentation} />
-      <SlideFeatures
-        Slide={
-          editor.Presentation.ListOfSlides.find(
-            (slide) => slide.ID === editor.Presentation.CurentSlide,
-          )!
-        }
-      />
+      {editor.Presentation.CurentSlide !== "" ? (
+        <SlideFeatures
+          Slide={
+            editor.Presentation.ListOfSlides.find(
+              (slide) => slide.ID === editor.Presentation.CurentSlide,
+            )!
+          }
+        />
+      ) : null}
       <ElementsCreateBtns />
       {editor.ListOfSelected.Elements.length === 1 ? (
         <EelementFeatures
@@ -43,14 +47,16 @@ function App() {
         Current={editor.Presentation.CurentSlide}
         Selected={editor.ListOfSelected.Slides}
       />
-      <Workplace
-        Slide={
-          editor.Presentation.ListOfSlides.find(
-            (slide) => slide.ID === editor.Presentation.CurentSlide,
-          )!
-        }
-        Selected={editor.ListOfSelected.Elements}
-      />
+      {editor.Presentation.CurentSlide !== "" ? (
+        <Workplace
+          Slide={
+            editor.Presentation.ListOfSlides.find(
+              (slide) => slide.ID === editor.Presentation.CurentSlide,
+            )!
+          }
+          Selected={editor.ListOfSelected.Elements}
+        />
+      ) : null}
       <SlideCreateAndDeleteBtns />
     </div>
   );

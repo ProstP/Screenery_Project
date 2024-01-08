@@ -128,6 +128,14 @@ export type SetNewTextType = {
   };
 };
 
+export type SetNewColorType = {
+  type: ElementsActionEnum.SET_NEW_COLOR;
+  payload: {
+    id: string;
+    color: string;
+  };
+};
+
 export type GeneralActionType =
   | TitleActionType
   | SetPresentationActionType
@@ -147,4 +155,5 @@ export type GeneralActionType =
   | DeleteElementType
   | ChangeBackgroundType
   | ChangeSlideColorType
-  | SetNewTextType;
+  | SetNewTextType
+  | SetNewColorType;

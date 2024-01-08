@@ -3,6 +3,7 @@ import { SlideType } from "../../model/Slide";
 import { ElementsView } from "../ElementsView/ElementsView";
 import Styles from "./Slides.module.css";
 import { useAppActions } from "../../Redux/Actions";
+import { isCtrlPressed } from "../../hooks/useCtrlLestener";
 
 type SlidesViewProps = {
   Slides: SlideType[];
@@ -20,7 +21,7 @@ type ShowSlideProps = {
 function ShowSlide(props: ShowSlideProps) {
   const { Slide, Slides, Current, Selected } = props;
   const { goToSlideAction, addSelectedSlide, changeOrders } = useAppActions();
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLLIElement>(null);
   const isSelected: boolean = Selected.indexOf(Slide.ID) !== -1;
   const isCurrent: boolean = Slide.ID === Current;
 
@@ -29,7 +30,7 @@ function ShowSlide(props: ShowSlideProps) {
     if (control === null) {
       return;
     }
-    let isCtrlPressed: boolean = false;
+    // let isCtrlPressed: boolean = false;
 
     const mouseDown = (mouseDownEvent: MouseEvent) => {
       let y: number = 0;
@@ -72,6 +73,7 @@ function ShowSlide(props: ShowSlideProps) {
               if (minY < htmlElt!.offsetTop + htmlElt!.offsetHeight / 2) {
                 if (i < minIndexTo || minIndexTo === -1) {
                   minIndexTo = i;
+                  console.log(minIndexTo);
                 }
               }
             }
@@ -95,21 +97,21 @@ function ShowSlide(props: ShowSlideProps) {
       window.addEventListener("mousemove", onDrag);
       window.addEventListener("mouseup", onDrop);
     };
-    const ctrlHandled = (event: KeyboardEvent) => {
-      isCtrlPressed = event.ctrlKey;
-    };
+    // const ctrlHandled = (event: KeyboardEvent) => {
+    //   isCtrlPressed = event.ctrlKey;
+    // };
 
     control.addEventListener("mousedown", mouseDown);
-    window.addEventListener("keydown", ctrlHandled);
-    window.addEventListener("keyup", ctrlHandled);
+    // window.addEventListener("keydown", ctrlHandled);
+    // window.addEventListener("keyup", ctrlHandled);
     return () => {
       control.removeEventListener("mousedown", mouseDown);
-      window.removeEventListener("keydown", ctrlHandled);
-      window.removeEventListener("keyup", ctrlHandled);
+      // window.removeEventListener("keydown", ctrlHandled);
+      // window.removeEventListener("keyup", ctrlHandled);
     };
   });
   return (
-    <div
+    <li
       id={Slide.ID}
       ref={ref}
       className={
@@ -130,14 +132,14 @@ function ShowSlide(props: ShowSlideProps) {
         Selected={[]}
         forWb={false}
       />
-    </div>
+    </li>
   );
 }
 
 function SlidesView(props: SlidesViewProps) {
   const { Slides, Current, Selected } = props;
   return (
-    <div id="slides" className={Styles.list}>
+    <ul id="slides" className={Styles.list}>
       {Slides.map((slide) => (
         <ShowSlide
           Slide={slide}
@@ -146,7 +148,7 @@ function SlidesView(props: SlidesViewProps) {
           Selected={Selected}
         />
       ))}
-    </div>
+    </ul>
   );
 }
 

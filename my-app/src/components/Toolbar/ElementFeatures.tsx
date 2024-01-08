@@ -15,6 +15,7 @@ function EelementFeatures(props: EelementFeaturesProps) {
     changeScaleSelectedElements,
     setNewImage,
     setNewFont,
+    setNewColor,
   } = useAppActions();
   return (
     <div
@@ -31,7 +32,7 @@ function EelementFeatures(props: EelementFeaturesProps) {
       <div>
         <p style={{ color: "white" }}>Position:</p>
         <input
-          style={{ width: "40%" }}
+          style={{ width: "30%" }}
           type="number"
           value={Elt.Position.X}
           onChange={(event) =>
@@ -39,7 +40,7 @@ function EelementFeatures(props: EelementFeaturesProps) {
           }
         ></input>
         <input
-          style={{ width: "40%" }}
+          style={{ width: "30%" }}
           type="number"
           value={Elt.Position.Y}
           onChange={(event) =>
@@ -50,7 +51,7 @@ function EelementFeatures(props: EelementFeaturesProps) {
       <div>
         <p style={{ color: "white" }}>Scale:</p>
         <input
-          style={{ width: "40%" }}
+          style={{ width: "30%" }}
           type="number"
           value={Elt.Scale.Wigth}
           onChange={(event) =>
@@ -61,7 +62,7 @@ function EelementFeatures(props: EelementFeaturesProps) {
           }
         ></input>
         <input
-          style={{ width: "40%" }}
+          style={{ width: "30%" }}
           type="number"
           value={Elt.Scale.Height}
           onChange={(event) =>
@@ -168,6 +169,19 @@ function EelementFeatures(props: EelementFeaturesProps) {
                 event.target.value,
               );
             }}
+          ></input>
+        </div>
+      ) : null}
+      {Elt.Type === "graphic" ? (
+        <div>
+          <p style={{ color: "white" }}>Color</p>
+          <input
+            type="color"
+            style={{
+              width: "20%",
+            }}
+            value={Elt.Color}
+            onChange={(event) => setNewColor(Elt.ID, event.target.value)}
           ></input>
         </div>
       ) : null}

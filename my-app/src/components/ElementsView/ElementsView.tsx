@@ -3,6 +3,7 @@ import { useAppActions } from "../../Redux/Actions";
 import { GeneralElementType } from "../../model/Element";
 import { selectTypeOfElement } from "./SelectTypeOfElement";
 import Styles from "./Elements.module.css";
+import { isCtrlPressed } from "../../hooks/useCtrlLestener";
 
 const INTERVAL = 3;
 const NOT_RESIZE = 0;
@@ -65,7 +66,7 @@ function ShowElement(props: ShowElementProps) {
     if (control === null) {
       return;
     }
-    let isCtrlPressed = false;
+    // let isCtrlPressed = false;
     const mouseDown = (mouseDownEvent: MouseEvent) => {
       const resize = findResizeBorder(
         mouseDownEvent.offsetX,
@@ -127,7 +128,7 @@ function ShowElement(props: ShowElementProps) {
               break;
             case LEFT_RESIZE:
               moveSelectedElement(x, 0);
-              changeScaleSelectedElements(-x, y);
+              changeScaleSelectedElements(-x, 0);
               break;
             case RIGHT_RESIZE:
               changeScaleSelectedElements(x, 0);
@@ -144,17 +145,17 @@ function ShowElement(props: ShowElementProps) {
       window.addEventListener("mouseup", onDrop);
     };
 
-    const ctrlHandled = (event: KeyboardEvent) => {
-      isCtrlPressed = event.ctrlKey;
-    };
+    // const ctrlHandled = (event: KeyboardEvent) => {
+    //   isCtrlPressed = event.ctrlKey;
+    // };
 
     control.addEventListener("mousedown", mouseDown);
-    window.addEventListener("keydown", ctrlHandled);
-    window.addEventListener("keyup", ctrlHandled);
+    // window.addEventListener("keydown", ctrlHandled);
+    // window.addEventListener("keyup", ctrlHandled);
     return () => {
       control.removeEventListener("mousedown", mouseDown);
-      window.removeEventListener("keydown", ctrlHandled);
-      window.removeEventListener("keyup", ctrlHandled);
+      // window.removeEventListener("keydown", ctrlHandled);
+      // window.removeEventListener("keyup", ctrlHandled);
     };
   });
   return (

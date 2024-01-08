@@ -9,6 +9,7 @@ import {
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { Editor } from "../data/const";
 import { EditorType } from "../model/Editor";
+import { SlideType } from "../model/Slide";
 
 const titleReducer = (state: EditorType, action: GeneralActionType) => {
   if (action.type === ActionsEnum.CHANGE_PRESENTATION_TITLE) {
@@ -189,6 +190,26 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
           ListOfSlides: slides,
         },
       };
+    case ElementsActionEnum.SET_NEW_COLOR:
+      for (pos = 0; pos < slides.length; pos++) {
+        if (slides[pos].ID === state.Presentation.CurentSlide) {
+          break;
+        }
+      }
+      eltPos = slides[pos].ListOfElements.indexOf(
+        slides[pos].ListOfElements.find((elt) => elt.ID === action.payload.id)!,
+      );
+      elt = slides[pos].ListOfElements[eltPos];
+      if (elt.Type === "graphic") {
+        elt.Color = action.payload.color;
+      }
+      return {
+        ...state,
+        Presentation: {
+          ...state.Presentation,
+          ListOfSlides: slides,
+        },
+      };
     default:
       return state;
   }
@@ -199,11 +220,12 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
   const current = state.Presentation.ListOfSlides.find(
     (slide) => slide.ID === state.Presentation.CurentSlide,
   );
-  let newSlide;
+  let newSlide: SlideType;
+  let slide: SlideType | undefined;
   let counter = state.Presentation.SlideCounter;
-  let to;
-  let deleted;
-  let firstPart;
+  let to: number;
+  let deleted: SlideType[];
+  let firstPart: SlideType[];
   switch (action.type) {
     case SlidesActionEnum.ADD_SLIDE:
       newSlide = action.payload;
@@ -238,7 +260,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
       }
       to =
         action.payload.to >= action.payload.from
-          ? action.payload.to - action.payload.from
+          ? action.payload.to - state.ListOfSelected.Slides.length
           : action.payload.to;
       firstPart = slides.splice(0, to);
       return {
@@ -249,20 +271,26 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
         },
       };
     case SlidesActionEnum.DELETE_SELECTED_SLIDES:
-      if (state.Presentation.ListOfSlides.length === 1) {
-        return state;
+      if (
+        (slide = slides.find(
+          (slide) => slide.ID === state.Presentation.CurentSlide,
+        )) !== undefined
+      ) {
+        slides.splice(slides.indexOf(slide), 1);
       }
       state.ListOfSelected.Slides.forEach((id) => {
-        slides.splice(
-          slides.indexOf(slides.find((slide) => slide.ID === id)!),
-          1,
-        );
+        slide = slides.find((slide) => slide.ID === id);
+        if (slide !== undefined) {
+          console.log(slide);
+          slides.splice(slides.indexOf(slide), 1);
+        }
       });
       return {
         ...state,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
+          CurentSlide: "",
         },
       };
     case SlidesActionEnum.CHANGE_BACKGROUND:
@@ -297,6 +325,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
     case ElementsActionEnum.SET_NEW_IMAGE:
     case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
     case ElementsActionEnum.SET_NEW_TEXT:
+    case ElementsActionEnum.SET_NEW_COLOR:
       return elementReducer(state, action);
     default:
       return state;
@@ -375,6 +404,7 @@ const presentationReducer = (state: EditorType, action: GeneralActionType) => {
     case ElementsActionEnum.SET_NEW_IMAGE:
     case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
     case ElementsActionEnum.SET_NEW_TEXT:
+    case ElementsActionEnum.SET_NEW_COLOR:
       return slidesReducer(state, action);
     default:
       return state;
@@ -410,6 +440,7 @@ const editorReducer = (
     case ElementsActionEnum.SET_NEW_IMAGE:
     case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
     case ElementsActionEnum.SET_NEW_TEXT:
+    case ElementsActionEnum.SET_NEW_COLOR:
       return presentationReducer(state, action);
     case ListOfSelectedEnum.ADD_SELECTED_ELEMENT:
     case ListOfSelectedEnum.ADD_SELECTED_SLIDE:

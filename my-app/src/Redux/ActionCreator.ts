@@ -172,6 +172,16 @@ const setNewText = (id: string, text: string) => {
   };
 };
 
+const setNewColor = (id: string, color: string) => {
+  return {
+    type: ElementsActionEnum.SET_NEW_COLOR,
+    payload: {
+      id: id,
+      color: color,
+    },
+  };
+};
+
 export {
   goToSlideAction,
   setPresentation,
@@ -192,4 +202,5 @@ export {
   changeBackground,
   changeSlideColor,
   setNewText,
+  setNewColor,
 };
