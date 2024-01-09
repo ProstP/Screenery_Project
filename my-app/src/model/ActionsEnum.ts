@@ -24,8 +24,13 @@ export enum ElementsActionEnum {
   DELETE_SELECTED_ELEMENT = "DELETE_SELECTED_ELEMENT",
 }
 
-export enum ListOfSelectedEnum {
+export enum ListOfSelectedActionEnum {
   ADD_SELECTED_ELEMENT = "ADD_SELECTED_ELEMENT",
   ADD_SELECTED_SLIDE = "ADD_SELECTED_SLIDE",
   INIT_SELECTED = "INIT_SELECTED",
+}
+
+export enum HistoryActionEnum {
+  UNDO = "UNDO",
+  REDO = "REDO",
 }

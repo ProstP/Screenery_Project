@@ -3,12 +3,12 @@ import { SlideType } from "../../model/Slide";
 import { ElementsView } from "../ElementsView/ElementsView";
 import Styles from "./Slides.module.css";
 import { useAppActions } from "../../Redux/Actions";
-import { isCtrlPressed } from "../../hooks/useCtrlLestener";
 
 type SlidesViewProps = {
   Slides: SlideType[];
   Current: string;
   Selected: string[];
+  isCtrlPressed: boolean;
 };
 
 type ShowSlideProps = {
@@ -16,10 +16,11 @@ type ShowSlideProps = {
   Slides: SlideType[];
   Current: string;
   Selected: string[];
+  isCtrlPressed: boolean;
 };
 
 function ShowSlide(props: ShowSlideProps) {
-  const { Slide, Slides, Current, Selected } = props;
+  const { Slide, Slides, Current, Selected, isCtrlPressed } = props;
   const { goToSlideAction, addSelectedSlide, changeOrders } = useAppActions();
   const ref = useRef<HTMLLIElement>(null);
   const isSelected: boolean = Selected.indexOf(Slide.ID) !== -1;
@@ -30,7 +31,6 @@ function ShowSlide(props: ShowSlideProps) {
     if (control === null) {
       return;
     }
-    // let isCtrlPressed: boolean = false;
 
     const mouseDown = (mouseDownEvent: MouseEvent) => {
       let y: number = 0;
@@ -97,17 +97,10 @@ function ShowSlide(props: ShowSlideProps) {
       window.addEventListener("mousemove", onDrag);
       window.addEventListener("mouseup", onDrop);
     };
-    // const ctrlHandled = (event: KeyboardEvent) => {
-    //   isCtrlPressed = event.ctrlKey;
-    // };
 
     control.addEventListener("mousedown", mouseDown);
-    // window.addEventListener("keydown", ctrlHandled);
-    // window.addEventListener("keyup", ctrlHandled);
     return () => {
       control.removeEventListener("mousedown", mouseDown);
-      // window.removeEventListener("keydown", ctrlHandled);
-      // window.removeEventListener("keyup", ctrlHandled);
     };
   });
   return (
@@ -131,13 +124,14 @@ function ShowSlide(props: ShowSlideProps) {
         Elements={Slide.ListOfElements}
         Selected={[]}
         forWb={false}
+        isCtrlPressed={false}
       />
     </li>
   );
 }
 
 function SlidesView(props: SlidesViewProps) {
-  const { Slides, Current, Selected } = props;
+  const { Slides, Current, Selected, isCtrlPressed } = props;
   return (
     <ul id="slides" className={Styles.list}>
       {Slides.map((slide) => (
@@ -146,6 +140,7 @@ function SlidesView(props: SlidesViewProps) {
           Slides={Slides}
           Current={Current}
           Selected={Selected}
+          isCtrlPressed={isCtrlPressed}
         />
       ))}
     </ul>

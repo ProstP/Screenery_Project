@@ -1,7 +1,8 @@
 import {
   ActionsEnum,
   ElementsActionEnum,
-  ListOfSelectedEnum,
+  HistoryActionEnum,
+  ListOfSelectedActionEnum,
   SlidesActionEnum,
 } from "../model/ActionsEnum";
 import { GeneralElementType } from "../model/Element";
@@ -79,7 +80,7 @@ const addSlideAction = (slide: SlideType) => {
 
 const addSelectedElement = (id: string, clear: boolean) => {
   return {
-    type: ListOfSelectedEnum.ADD_SELECTED_ELEMENT,
+    type: ListOfSelectedActionEnum.ADD_SELECTED_ELEMENT,
     payload: {
       id: id,
       clear: clear,
@@ -89,7 +90,7 @@ const addSelectedElement = (id: string, clear: boolean) => {
 
 const addSelectedSlide = (id: string, clear: boolean) => {
   return {
-    type: ListOfSelectedEnum.ADD_SELECTED_SLIDE,
+    type: ListOfSelectedActionEnum.ADD_SELECTED_SLIDE,
     payload: {
       id: id,
       clear: clear,
@@ -99,7 +100,7 @@ const addSelectedSlide = (id: string, clear: boolean) => {
 
 const initSelected = () => {
   return {
-    type: ListOfSelectedEnum.INIT_SELECTED,
+    type: ListOfSelectedActionEnum.INIT_SELECTED,
   };
 };
 
@@ -182,6 +183,18 @@ const setNewColor = (id: string, color: string) => {
   };
 };
 
+const UndoAction = () => {
+  return {
+    type: HistoryActionEnum.UNDO,
+  };
+};
+
+const RedoAction = () => {
+  return {
+    type: HistoryActionEnum.REDO,
+  };
+};
+
 export {
   goToSlideAction,
   setPresentation,
@@ -203,4 +216,6 @@ export {
   changeSlideColor,
   setNewText,
   setNewColor,
+  UndoAction,
+  RedoAction,
 };

@@ -3,7 +3,6 @@ import { useAppActions } from "../../Redux/Actions";
 import { GeneralElementType } from "../../model/Element";
 import { selectTypeOfElement } from "./SelectTypeOfElement";
 import Styles from "./Elements.module.css";
-import { isCtrlPressed } from "../../hooks/useCtrlLestener";
 
 const INTERVAL = 3;
 const NOT_RESIZE = 0;
@@ -17,12 +16,14 @@ type ShowElementProps = {
   Elements: GeneralElementType[];
   Selected: string[];
   forWb: boolean;
+  isCtrlPressed: boolean;
 };
 
 type ElementsViewProps = {
   Elements: GeneralElementType[];
   Selected: string[];
   forWb: boolean;
+  isCtrlPressed: boolean;
 };
 
 function findResizeBorder(
@@ -53,7 +54,7 @@ function findResizeBorder(
 }
 
 function ShowElement(props: ShowElementProps) {
-  const { elt, Elements, Selected, forWb } = props;
+  const { elt, Elements, Selected, forWb, isCtrlPressed } = props;
   const {
     addSelectedElement,
     moveSelectedElement,
@@ -66,7 +67,6 @@ function ShowElement(props: ShowElementProps) {
     if (control === null) {
       return;
     }
-    // let isCtrlPressed = false;
     const mouseDown = (mouseDownEvent: MouseEvent) => {
       const resize = findResizeBorder(
         mouseDownEvent.offsetX,
@@ -145,17 +145,9 @@ function ShowElement(props: ShowElementProps) {
       window.addEventListener("mouseup", onDrop);
     };
 
-    // const ctrlHandled = (event: KeyboardEvent) => {
-    //   isCtrlPressed = event.ctrlKey;
-    // };
-
     control.addEventListener("mousedown", mouseDown);
-    // window.addEventListener("keydown", ctrlHandled);
-    // window.addEventListener("keyup", ctrlHandled);
     return () => {
       control.removeEventListener("mousedown", mouseDown);
-      // window.removeEventListener("keydown", ctrlHandled);
-      // window.removeEventListener("keyup", ctrlHandled);
     };
   });
   return (
@@ -179,7 +171,7 @@ function ShowElement(props: ShowElementProps) {
 }
 
 function ElementsView(props: ElementsViewProps) {
-  const { Elements, Selected, forWb } = props;
+  const { Elements, Selected, forWb, isCtrlPressed } = props;
   return (
     <div>
       {Elements.map((element) => (
@@ -188,6 +180,7 @@ function ElementsView(props: ElementsViewProps) {
           Elements={Elements}
           Selected={Selected}
           forWb={forWb}
+          isCtrlPressed={isCtrlPressed}
         />
       ))}
     </div>

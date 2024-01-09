@@ -1,11 +1,10 @@
-import { useEffect } from "react";
-
-let isCtrlPressed: boolean = false;
+import { useEffect, useState } from "react";
 
 const ctlrHandled = () => {
+  const [isCtrlPressed, toggle] = useState(false);
   useEffect(() => {
     const keyPressed = (event: KeyboardEvent) => {
-      isCtrlPressed = event.ctrlKey;
+      toggle(event.ctrlKey);
     };
 
     window.addEventListener("keydown", keyPressed);
@@ -15,6 +14,10 @@ const ctlrHandled = () => {
       window.removeEventListener("keyup", keyPressed);
     };
   });
+
+  return {
+    isCtrlPressed,
+  };
 };
 
-export { ctlrHandled, isCtrlPressed };
+export { ctlrHandled };

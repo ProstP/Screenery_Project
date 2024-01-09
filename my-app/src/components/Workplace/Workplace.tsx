@@ -5,10 +5,11 @@ import { ElementsView } from "../ElementsView/ElementsView";
 type WorkplaceProps = {
   Slide: SlideType;
   Selected: string[];
+  isCtrlPressed: boolean;
 };
 
 function Workplace(props: WorkplaceProps) {
-  const { Slide, Selected } = props;
+  const { Slide, Selected, isCtrlPressed } = props;
   return (
     <div
       id="workplace"
@@ -24,6 +25,7 @@ function Workplace(props: WorkplaceProps) {
         Elements={Slide.ListOfElements}
         Selected={Selected}
         forWb={true}
+        isCtrlPressed={isCtrlPressed}
       />
     </div>
   );

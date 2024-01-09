@@ -12,10 +12,15 @@ import { SlidesView } from "./components/SlidesView/SlidesView";
 import { Workplace } from "./components/Workplace/Workplace";
 import { SlideCreateAndDeleteBtns } from "./components/Toolbar/SlideCreateDeleteBtns";
 import { ctlrHandled } from "./hooks/useCtrlLestener";
+import { useUndoRedoListenner } from "./hooks/useUndoRedoListeners";
 
 function App() {
   const editor = useAppSelector((state) => state.editor);
-  ctlrHandled();
+  const { isCtrlPressed } = ctlrHandled();
+  console.log();
+
+  useUndoRedoListenner();
+
   return (
     <div className={Styles.editor}>
       <SaveAndLoadBtns Presentation={editor.Presentation} />
@@ -46,6 +51,7 @@ function App() {
         Slides={editor.Presentation.ListOfSlides}
         Current={editor.Presentation.CurentSlide}
         Selected={editor.ListOfSelected.Slides}
+        isCtrlPressed={isCtrlPressed}
       />
       {editor.Presentation.CurentSlide !== "" ? (
         <Workplace
@@ -55,6 +61,7 @@ function App() {
             )!
           }
           Selected={editor.ListOfSelected.Elements}
+          isCtrlPressed={isCtrlPressed}
         />
       ) : null}
       <SlideCreateAndDeleteBtns />

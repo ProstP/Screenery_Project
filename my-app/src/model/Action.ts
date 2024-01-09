@@ -1,7 +1,8 @@
 import {
   ActionsEnum,
   ElementsActionEnum,
-  ListOfSelectedEnum,
+  HistoryActionEnum,
+  ListOfSelectedActionEnum,
   SlidesActionEnum,
 } from "./ActionsEnum";
 import { GeneralElementType } from "./Element";
@@ -60,7 +61,7 @@ export type AddElementActionType = {
 };
 
 export type AddSelectedElementActionType = {
-  type: ListOfSelectedEnum.ADD_SELECTED_ELEMENT;
+  type: ListOfSelectedActionEnum.ADD_SELECTED_ELEMENT;
   payload: {
     id: string;
     clear: boolean;
@@ -68,7 +69,7 @@ export type AddSelectedElementActionType = {
 };
 
 export type AddSelectedSlideActionType = {
-  type: ListOfSelectedEnum.ADD_SELECTED_SLIDE;
+  type: ListOfSelectedActionEnum.ADD_SELECTED_SLIDE;
   payload: {
     id: string;
     clear: boolean;
@@ -76,7 +77,7 @@ export type AddSelectedSlideActionType = {
 };
 
 export type InitSelectedActionType = {
-  type: ListOfSelectedEnum.INIT_SELECTED;
+  type: ListOfSelectedActionEnum.INIT_SELECTED;
 };
 
 export type ChangeScaleSelectedElementsActionType = {
@@ -136,6 +137,14 @@ export type SetNewColorType = {
   };
 };
 
+export type UndoActionType = {
+  type: HistoryActionEnum.UNDO;
+};
+
+export type RedoActionType = {
+  type: HistoryActionEnum.REDO;
+};
+
 export type GeneralActionType =
   | TitleActionType
   | SetPresentationActionType
@@ -156,4 +165,6 @@ export type GeneralActionType =
   | ChangeBackgroundType
   | ChangeSlideColorType
   | SetNewTextType
-  | SetNewColorType;
+  | SetNewColorType
+  | UndoActionType
+  | RedoActionType;

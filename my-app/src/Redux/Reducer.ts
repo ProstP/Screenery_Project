@@ -3,18 +3,22 @@ import { GeneralActionType } from "../model/Action";
 import {
   ActionsEnum,
   ElementsActionEnum,
-  ListOfSelectedEnum,
+  HistoryActionEnum,
+  ListOfSelectedActionEnum,
   SlidesActionEnum,
 } from "../model/ActionsEnum";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { Editor } from "../data/const";
 import { EditorType } from "../model/Editor";
 import { SlideType } from "../model/Slide";
+import { PresentationType } from "../model/Presentation";
+import { addHistory } from "../model/History";
 
 const titleReducer = (state: EditorType, action: GeneralActionType) => {
   if (action.type === ActionsEnum.CHANGE_PRESENTATION_TITLE) {
     return {
       ...state,
+      History: addHistory(state.History, state.Presentation),
       Presentation: {
         ...state.Presentation,
         Name: action.payload,
@@ -29,6 +33,7 @@ const currentReducer = (state: EditorType, action: GeneralActionType) => {
   if (action.type === SlidesActionEnum.GOTO_SLIDE) {
     return {
       ...state,
+      History: addHistory(state.History, state.Presentation),
       Presentation: {
         ...state.Presentation,
         CurentSlide: action.payload,
@@ -40,30 +45,36 @@ const currentReducer = (state: EditorType, action: GeneralActionType) => {
 };
 
 const elementReducer = (state: EditorType, action: GeneralActionType) => {
-  const slides = state.Presentation.ListOfSlides;
+  const slides = [...state.Presentation.ListOfSlides];
+  const history = addHistory(state.History, state.Presentation);
+  let newSlides: SlideType[];
   let pos = 0;
   let eltPos = 0;
   let elt;
   let counter = state.Presentation.EltCounter;
   switch (action.type) {
     case ElementsActionEnum.MOVE_SELECTED_ELEMENT:
-      for (let i = 0; i < slides.length; i++) {
-        for (let j = 0; j < slides[i].ListOfElements.length; j++) {
-          if (
-            state.ListOfSelected.Elements.indexOf(
-              slides[i].ListOfElements[j].ID,
-            ) !== -1
-          ) {
-            slides[i].ListOfElements[j].Position.X += action.payload.x;
-            slides[i].ListOfElements[j].Position.Y += action.payload.y;
-          }
+      newSlides = state.Presentation.ListOfSlides.map((slide) => {
+        if (slide.ID === state.Presentation.CurentSlide) {
+          return {
+            ...slide,
+            ListOfElements: slide.ListOfElements.map((elt) => {
+              if (state.ListOfSelected.Elements.indexOf(elt.ID) !== -1) {
+                elt.Position.X += action.payload.x;
+                elt.Position.Y += action.payload.y;
+              }
+              return elt;
+            }),
+          };
         }
-      }
+        return slide;
+      });
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
-          ListOfSlides: slides,
+          ListOfSlides: newSlides,
         },
       };
     case ElementsActionEnum.ADD_ELEMENT:
@@ -78,6 +89,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       slides[pos].ListOfElements.push(elt);
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -99,6 +111,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       }
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -119,6 +132,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       }
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -144,6 +158,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       }
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -165,6 +180,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       });
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -185,6 +201,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       }
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -205,6 +222,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
       }
       return {
         ...state,
+        History: history,
         Presentation: {
           ...state.Presentation,
           ListOfSlides: slides,
@@ -216,6 +234,7 @@ const elementReducer = (state: EditorType, action: GeneralActionType) => {
 };
 
 const slidesReducer = (state: EditorType, action: GeneralActionType) => {
+  const history = addHistory(state.History, state.Presentation);
   const slides = state.Presentation.ListOfSlides;
   const current = state.Presentation.ListOfSlides.find(
     (slide) => slide.ID === state.Presentation.CurentSlide,
@@ -238,6 +257,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
           ListOfSlides: [...slides, newSlide],
           SlideCounter: counter,
         },
+        History: history,
       };
     case SlidesActionEnum.SET_SLIDES:
       return {
@@ -256,6 +276,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
             ...state.Presentation,
             ListOfSlides: [...slides, ...deleted],
           },
+          History: history,
         };
       }
       to =
@@ -269,6 +290,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
           ...state.Presentation,
           ListOfSlides: [...firstPart, ...deleted, ...slides],
         },
+        History: history,
       };
     case SlidesActionEnum.DELETE_SELECTED_SLIDES:
       if (
@@ -292,6 +314,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
           ListOfSlides: slides,
           CurentSlide: "",
         },
+        History: history,
       };
     case SlidesActionEnum.CHANGE_BACKGROUND:
       console.log(action);
@@ -305,6 +328,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
           ...state.Presentation,
           ListOfSlides: slides,
         },
+        History: history,
       };
     case SlidesActionEnum.CHANGE_SLIDE_COLOR:
       if (current === undefined) {
@@ -317,16 +341,8 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
           ...state.Presentation,
           ListOfSlides: slides,
         },
+        History: history,
       };
-    case ElementsActionEnum.MOVE_SELECTED_ELEMENT:
-    case ElementsActionEnum.ADD_ELEMENT:
-    case ElementsActionEnum.CHANDE_SCALE_SELECTED_ELEMENTS:
-    case ElementsActionEnum.SET_NEW_FONT:
-    case ElementsActionEnum.SET_NEW_IMAGE:
-    case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
-    case ElementsActionEnum.SET_NEW_TEXT:
-    case ElementsActionEnum.SET_NEW_COLOR:
-      return elementReducer(state, action);
     default:
       return state;
   }
@@ -335,7 +351,7 @@ const slidesReducer = (state: EditorType, action: GeneralActionType) => {
 const selectedReducer = (state: EditorType, action: GeneralActionType) => {
   const selected = state.ListOfSelected;
   switch (action.type) {
-    case ListOfSelectedEnum.INIT_SELECTED:
+    case ListOfSelectedActionEnum.INIT_SELECTED:
       return {
         ...state,
         ListOfSelected: {
@@ -343,7 +359,7 @@ const selectedReducer = (state: EditorType, action: GeneralActionType) => {
           Elements: [],
         },
       };
-    case ListOfSelectedEnum.ADD_SELECTED_ELEMENT:
+    case ListOfSelectedActionEnum.ADD_SELECTED_ELEMENT:
       if (action.payload.clear) {
         return {
           ...state,
@@ -361,7 +377,7 @@ const selectedReducer = (state: EditorType, action: GeneralActionType) => {
           Elements: selected.Elements,
         },
       };
-    case ListOfSelectedEnum.ADD_SELECTED_SLIDE:
+    case ListOfSelectedActionEnum.ADD_SELECTED_SLIDE:
       if (action.payload.clear) {
         return {
           ...state,
@@ -384,28 +400,49 @@ const selectedReducer = (state: EditorType, action: GeneralActionType) => {
   }
 };
 
-const presentationReducer = (state: EditorType, action: GeneralActionType) => {
+const historyReducer = (state: EditorType, action: GeneralActionType) => {
+  const undoList = state.History.UndoActions;
+  const redoList = state.History.RedoActions;
+  let presentation: PresentationType;
   switch (action.type) {
-    case ActionsEnum.CHANGE_PRESENTATION_TITLE:
-      return titleReducer(state, action);
-
-    case SlidesActionEnum.GOTO_SLIDE:
-      return currentReducer(state, action);
-    case SlidesActionEnum.ADD_SLIDE:
-    case SlidesActionEnum.SET_SLIDES:
-    case SlidesActionEnum.CHANGE_ORDERS:
-    case SlidesActionEnum.DELETE_SELECTED_SLIDES:
-    case SlidesActionEnum.CHANGE_BACKGROUND:
-    case SlidesActionEnum.CHANGE_SLIDE_COLOR:
-    case ElementsActionEnum.ADD_ELEMENT:
-    case ElementsActionEnum.MOVE_SELECTED_ELEMENT:
-    case ElementsActionEnum.CHANDE_SCALE_SELECTED_ELEMENTS:
-    case ElementsActionEnum.SET_NEW_FONT:
-    case ElementsActionEnum.SET_NEW_IMAGE:
-    case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
-    case ElementsActionEnum.SET_NEW_TEXT:
-    case ElementsActionEnum.SET_NEW_COLOR:
-      return slidesReducer(state, action);
+    case HistoryActionEnum.UNDO:
+      if (undoList.length === 0) {
+        return state;
+      }
+      redoList.push(JSON.stringify(state.Presentation));
+      presentation = JSON.parse(undoList.pop()!);
+      // redoList.push(state.Presentation);
+      // presentation = undoList.pop()!;
+      return {
+        Presentation: presentation,
+        ListOfSelected: {
+          Slides: [],
+          Elements: [],
+        },
+        History: {
+          RedoActions: redoList,
+          UndoActions: undoList,
+        },
+      };
+    case HistoryActionEnum.REDO:
+      if (redoList.length === 0) {
+        return state;
+      }
+      undoList.push(JSON.stringify(state.Presentation));
+      presentation = JSON.parse(redoList.pop()!);
+      // undoList.push(state.Presentation);
+      // presentation = redoList.pop()!;
+      return {
+        Presentation: presentation,
+        ListOfSelected: {
+          Slides: [],
+          Elements: [],
+        },
+        History: {
+          RedoActions: redoList,
+          UndoActions: undoList,
+        },
+      };
     default:
       return state;
   }
@@ -418,21 +455,24 @@ const editorReducer = (
   switch (action.type) {
     case ActionsEnum.SET_PRESENTATION:
       return {
-        ...state,
         Presentation: action.payload,
         ListOfSelected: {
           Elements: [],
           Slides: [],
         },
+        History: addHistory(state.History, state.Presentation),
       };
     case ActionsEnum.CHANGE_PRESENTATION_TITLE:
+      return titleReducer(state, action);
     case SlidesActionEnum.GOTO_SLIDE:
+      return currentReducer(state, action);
     case SlidesActionEnum.ADD_SLIDE:
     case SlidesActionEnum.SET_SLIDES:
     case SlidesActionEnum.CHANGE_ORDERS:
     case SlidesActionEnum.DELETE_SELECTED_SLIDES:
     case SlidesActionEnum.CHANGE_BACKGROUND:
     case SlidesActionEnum.CHANGE_SLIDE_COLOR:
+      return slidesReducer(state, action);
     case ElementsActionEnum.ADD_ELEMENT:
     case ElementsActionEnum.MOVE_SELECTED_ELEMENT:
     case ElementsActionEnum.CHANDE_SCALE_SELECTED_ELEMENTS:
@@ -441,11 +481,14 @@ const editorReducer = (
     case ElementsActionEnum.DELETE_SELECTED_ELEMENT:
     case ElementsActionEnum.SET_NEW_TEXT:
     case ElementsActionEnum.SET_NEW_COLOR:
-      return presentationReducer(state, action);
-    case ListOfSelectedEnum.ADD_SELECTED_ELEMENT:
-    case ListOfSelectedEnum.ADD_SELECTED_SLIDE:
-    case ListOfSelectedEnum.INIT_SELECTED:
+      return elementReducer(state, action);
+    case ListOfSelectedActionEnum.ADD_SELECTED_ELEMENT:
+    case ListOfSelectedActionEnum.ADD_SELECTED_SLIDE:
+    case ListOfSelectedActionEnum.INIT_SELECTED:
       return selectedReducer(state, action);
+    case HistoryActionEnum.UNDO:
+    case HistoryActionEnum.REDO:
+      return historyReducer(state, action);
     default:
       return state;
   }
