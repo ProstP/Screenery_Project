@@ -1,6 +1,10 @@
 .workplace {
   position: absolute;
   background-color: white;
+  border-bottom-left-radius: 10px;
+  box-shadow: -15px 15px 0 #232D3F,
+              -15px 0 0 #232D3F,
+              0 15px 0 #232D3F;
   z-index: 1;
   width: 78%;
   height: 76%;

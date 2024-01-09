@@ -1,21 +1,41 @@
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: #232D3F;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #008170;
+  border-radius: 10px;
+}
+
 .list {
   position: absolute;
   width: 14%;
-  height: 72%;
-  top: 20vh;
-  left: 1%;
+  height: 72.9%;
+  top: 18vh;
+  left: 0.5%;
   list-style-type: none;
-  overflow-y: visible;
+  overflow-y: scroll;
+  direction: rtl;
 }
 
 .slide {
   position: relative;
-  width: 90%;
-  height: 14vh;
-  border: 5px solid black;
+  width: 85%;
+  height: 11.9vh;
+  border: 5px solid #232D3F;
+  border-radius: 5px;
   margin-top: 5%;
+  margin-right: 3.25%;
 }
 
 .current {
-  border: 5px solid #00cc99;
+  border-left: 5px solid #008170;
+  border-bottom: 5px solid #008170;
+  border-top: none;
+  border-right: none;
 }

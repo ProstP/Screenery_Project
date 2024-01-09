@@ -1,24 +1,32 @@
+/*
+Функционал с открытием меню в данное время ВЫРЕЗАН МНОЮ ЛИЧНО
+Для его возвращения необходимо сменить visibility (в .blockwithbtn) с none на hidden
+*/
+
 .blockwithbtn {
-  top: 12%;
-  left: 3.55%;
-  visibility: hidden;
+  top: 8.25%;
+  left: 4.35%;
+  visibility: visible;
   z-index: 2;
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  width: 5%;
+  justify-content: space-around;
+  width: 3.5%;
+  border: none;
 }
 
 .openmenubtn {
-  top: 9%;
-  left: 3.55%;
+  top: 7.25%; 
+  left: 4.35%;
   position: absolute;
-  background-color: #00cc99;
+  background-image: linear-gradient(#008170, #006658);
   border-radius: 4px;
   z-index: 2;
   color: white;
-  width: 5%;
+  width: 3.5%;
+  border: none;
+  visibility: hidden;
 }
 
 .blockwithbtn:hover,
@@ -27,10 +35,11 @@
 }
 
 .btn {
-  background-color: #00cc99;
+  background-image: linear-gradient(#008170, #006658);
   color: white;
   width: 100%;
   border-radius: 4px;
+  border: none;
 }
 
 .inputload {

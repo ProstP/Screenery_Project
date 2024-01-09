@@ -69,6 +69,31 @@ function LoadBtn() {
   );
 }
 
+function ExportBtn(props: SaveAndLoadBtnsProps) {
+  const { Presentation } = props;
+  return (
+    <button
+      className={Styles.btn}
+      onClick={() => {
+        const jsonData = JSON.stringify(Presentation);
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${Presentation.Name}.json`;
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        return;
+      }}
+    >
+      Export
+    </button>
+  );
+}
+
 function SaveAndLoadBtns(props: SaveAndLoadBtnsProps) {
   const { Presentation } = props;
   return (
@@ -76,6 +101,7 @@ function SaveAndLoadBtns(props: SaveAndLoadBtnsProps) {
       <button className={Styles.openmenubtn}>File</button>
       <div className={Styles.blockwithbtn}>
         <SaveBtn Presentation={Presentation} />
+        <ExportBtn Presentation={Presentation} />
         <LoadBtn />
       </div>
     </div>
