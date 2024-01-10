@@ -11,6 +11,7 @@ import { Title } from "./components/Title/Title";
 import { SlidesView } from "./components/SlidesView/SlidesView";
 import { Workplace } from "./components/Workplace/Workplace";
 import { SlideCreateAndDeleteBtns } from "./components/Toolbar/SlideCreateDeleteBtns";
+import { UndoAndRedoBtns } from "./components/Toolbar/UndoAndRedoBtns";
 import { ctlrHandled } from "./hooks/useCtrlLestener";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         />
       ) : null}
       <DeleteElementsBtn />
+      <UndoAndRedoBtns />
       <img className={Styles.background} src={Background}></img>
       <img className={Styles.logo} src={Logo}></img>
       <Title Title={editor.Presentation.Name} />

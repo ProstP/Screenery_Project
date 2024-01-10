@@ -7,25 +7,27 @@ type SaveAndLoadBtnsProps = { Presentation: PresentationType };
 function SaveBtn(props: SaveAndLoadBtnsProps) {
   const { Presentation } = props;
   return (
-    <button
-      className={Styles.btn}
-      onClick={() => {
-        const jsonData = JSON.stringify(Presentation);
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+    <div>
+      <button
+        className={Styles.btn}
+        onClick={() => {
+          const jsonData = JSON.stringify(Presentation);
+          const blob = new Blob([jsonData], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${Presentation.Name}.json`;
-        document.body.appendChild(link);
-        link.click();
-        URL.revokeObjectURL(url);
-        document.body.removeChild(link);
-        return;
-      }}
-    >
-      Save
-    </button>
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${Presentation.Name}.json`;
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+          return;
+        }}
+      >
+        Save
+      </button>
+    </div>
   );
 }
 
@@ -72,25 +74,27 @@ function LoadBtn() {
 function ExportBtn(props: SaveAndLoadBtnsProps) {
   const { Presentation } = props;
   return (
-    <button
-      className={Styles.btn}
-      onClick={() => {
-        const jsonData = JSON.stringify(Presentation);
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+    <div>
+      <button
+        className={Styles.btn}
+        /*onClick={() => {
+          const jsonData = JSON.stringify(Presentation);
+          const blob = new Blob([jsonData], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${Presentation.Name}.json`;
-        document.body.appendChild(link);
-        link.click();
-        URL.revokeObjectURL(url);
-        document.body.removeChild(link);
-        return;
-      }}
-    >
-      Export
-    </button>
+          const link = document.createElement("a");
+          link.href = url;                          TODO: переделать функцию под экспорт презентации в .pdf
+          link.download = `${Presentation.Name}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+          return;
+        }}*/
+      >
+        Export
+      </button>
+    </div>
   );
 }
 
